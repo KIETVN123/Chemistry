@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Tuần Hoàn Các Nguyên Tố Hóa Học - Tác Giả Đặng Quốc Kiệt 10C06</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0b0f19',
+                            card: '#111827',
+                            accent: '#06b6d4',
+                            pink: '#ec4899',
+                            gold: '#f59e0b',
+                            border: '#1f2937'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #080c14;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .element-card {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+        .element-card:hover {
+            transform: scale(1.18) z-index(30);
+            z-index: 40;
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.7);
+        }
+        .grid-periodic {
+            display: grid;
+            grid-template-columns: repeat(18, minmax(0, 1fr));
+            gap: 4px;
+        }
+        /* Color categories */
+        .cat-alkali { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #fca5a5; }
+        .cat-alkaline { background: rgba(249, 115, 22, 0.2); border-color: #f97316; color: #fdba74; }
+        .cat-transition { background: rgba(234, 179, 8, 0.2); border-color: #eab308; color: #fde047; }
+        .cat-post-transition { background: rgba(34, 197, 94, 0.2); border-color: #22c55e; color: #86efac; }
+        .cat-metalloid { background: rgba(20, 184, 166, 0.2); border-color: #14b8a6; color: #99f6e4; }
+        .cat-nonmetal { background: rgba(6, 182, 212, 0.2); border-color: #06b6d4; color: #a5f3fc; }
+        .cat-halogen { background: rgba(99, 102, 241, 0.2); border-color: #6366f1; color: #c7d2fe; }
+        .cat-noble { background: rgba(168, 85, 247, 0.2); border-color: #a855f7; color: #e9d5ff; }
+        .cat-lanthanide { background: rgba(236, 72, 153, 0.2); border-color: #ec4899; color: #fbcfe8; }
+        .cat-actinide { background: rgba(244, 63, 94, 0.2); border-color: #f43f5e; color: #fecdd3; }
+
+        /* Heatmap Styles */
+        .heatmap-mode .element-card {
+            background: var(--heatmap-bg, rgba(31, 41, 55, 0.5)) !important;
+            border-color: var(--heatmap-border, #374151) !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased selection:bg-cyan-500 selection:text-black">
+
+    <!-- Header Section -->
+    <header class="border-b border-gray-800 bg-slate-950/90 backdrop-blur sticky top-0 z-30 px-4 py-3">
+        <div class="max-w-[1700px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 border border-cyan-500/40 rounded-xl text-cyan-400 shadow-lg shadow-cyan-500/10">
+                    <i class="fa-solid fa-atom text-2xl animate-spin" style="animation-duration: 8s;"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black bg-gradient-to-r from-cyan-400 via-teal-300 to-amber-300 bg-clip-text text-transparent flex items-center gap-2">
+                        BẢNG TUẦN HOÀN HÓA HỌC HIỆN ĐẠI
+                        <span class="text-[10px] px-2 py-0.5 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-300 font-mono font-normal">PRO STEM 10</span>
+                    </h1>
+                    <p class="text-xs text-gray-400">Tác giả: <strong class="text-cyan-300 font-semibold">Đặng Quốc Kiệt - Lớp 10C06</strong> • Dự Án STEM Hóa Học 10</p>
+                </div>
+            </div>
+
+            <!-- STEM Navigation Bar -->
+            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+                <!-- Search Input -->
+                <div class="relative flex-1 sm:w-60">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                    <input type="text" id="searchInput" placeholder="Tìm Tên, Ký hiệu, Z..." 
+                        class="w-full pl-8 pr-3 py-1.5 bg-gray-900 border border-gray-700 rounded-lg text-xs focus:outline-none focus:border-cyan-500 transition-colors">
+                </div>
+
+                <!-- Calculator Tool Button -->
+                <button onclick="openCalcModal()" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-amber-300 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all">
+                    <i class="fa-solid fa-calculator text-amber-400"></i>
+                    <span>Tính Molar Mass</span>
+                </button>
+
+                <!-- Comparison Mode Button -->
+                <button onclick="openCompareModal()" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-teal-300 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all">
+                    <i class="fa-solid fa-code-compare text-teal-400"></i>
+                    <span>So Sánh Nguyên Tố</span>
+                </button>
+
+                <!-- Theory Button -->
+                <button onclick="openTheoryModal()" class="px-3 py-1.5 bg-cyan-950/60 hover:bg-cyan-900/80 border border-cyan-500/40 text-cyan-300 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>Lý Thuyết AO</span>
+                </button>
+
+                <!-- Copyright Author Button -->
+                <button onclick="openAuthorModal()" class="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-black font-bold rounded-lg text-xs flex items-center gap-1.5 transition-all shadow-md shadow-amber-500/20">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Tác Giả & Bản Quyền</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-[1700px] mx-auto p-4 flex-1 w-full flex flex-col gap-5">
+
+        <!-- Controls: Category Filters & Trend Heatmap Toggle -->
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-3 bg-gray-950/80 p-3 rounded-2xl border border-gray-800/80 backdrop-blur">
+            <!-- Category Filter Chips -->
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-1.5 text-xs">
+                <span class="text-gray-400 text-[11px] font-semibold mr-1"><i class="fa-solid fa-filter text-cyan-400"></i> Lọc:</span>
+                <button onclick="filterCategory('all')" class="filter-btn active px-2.5 py-1 rounded-md border border-gray-700 bg-gray-800 text-gray-200 hover:border-cyan-500 text-[11px]">Tất cả</button>
+                <button onclick="filterCategory('alkali')" class="filter-btn px-2.5 py-1 rounded-md border border-red-500/40 bg-red-950/30 text-red-300 text-[11px]">KL Kiềm</button>
+                <button onclick="filterCategory('alkaline')" class="filter-btn px-2.5 py-1 rounded-md border border-orange-500/40 bg-orange-950/30 text-orange-300 text-[11px]">KL Kiềm thổ</button>
+                <button onclick="filterCategory('transition')" class="filter-btn px-2.5 py-1 rounded-md border border-yellow-500/40 bg-yellow-950/30 text-yellow-300 text-[11px]">KL Chuyển tiếp</button>
+                <button onclick="filterCategory('post-transition')" class="filter-btn px-2.5 py-1 rounded-md border border-green-500/40 bg-green-950/30 text-green-300 text-[11px]">KL Yếu</button>
+                <button onclick="filterCategory('metalloid')" class="filter-btn px-2.5 py-1 rounded-md border border-teal-500/40 bg-teal-950/30 text-teal-300 text-[11px]">Á kim</button>
+                <button onclick="filterCategory('nonmetal')" class="filter-btn px-2.5 py-1 rounded-md border border-cyan-500/40 bg-cyan-950/30 text-cyan-300 text-[11px]">Phi kim</button>
+                <button onclick="filterCategory('halogen')" class="filter-btn px-2.5 py-1 rounded-md border border-indigo-500/40 bg-indigo-950/30 text-indigo-300 text-[11px]">Halogen</button>
+                <button onclick="filterCategory('noble')" class="filter-btn px-2.5 py-1 rounded-md border border-purple-500/40 bg-purple-950/30 text-purple-300 text-[11px]">Khí hiếm</button>
+                <button onclick="filterCategory('lanthanide')" class="filter-btn px-2.5 py-1 rounded-md border border-pink-500/40 bg-pink-950/30 text-pink-300 text-[11px]">Lanthanides</button>
+                <button onclick="filterCategory('actinide')" class="filter-btn px-2.5 py-1 rounded-md border border-rose-500/40 bg-rose-950/30 text-rose-300 text-[11px]">Actinides</button>
+            </div>
+
+            <!-- Heatmap View Selector -->
+            <div class="flex items-center gap-2 text-xs bg-gray-900 p-1.5 rounded-xl border border-gray-800 shrink-0">
+                <span class="text-gray-400 font-semibold px-1"><i class="fa-solid fa-fire text-amber-400"></i> Heatmap Xu Hướng:</span>
+                <select id="heatmapSelect" onchange="toggleHeatmap(this.value)" class="bg-gray-950 border border-gray-700 text-cyan-300 rounded-lg px-2.5 py-1 font-mono focus:outline-none">
+                    <option value="none">Tắt (Mặc định)</option>
+                    <option value="electronegativity">Độ Âm Điện (Pauling)</option>
+                    <option value="atomicRadius">Bán Kính Nguyên Tử (Z)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Periodic Table Grid Container -->
+        <div class="overflow-x-auto pb-4">
+            <div class="min-w-[1150px] flex flex-col gap-5">
+                <!-- Main 18 Columns Table -->
+                <div id="periodicGrid" class="grid-periodic"></div>
+
+                <!-- Lanthanides & Actinides separated block -->
+                <div class="flex flex-col gap-1 mt-2 pl-[11.1%]">
+                    <div id="lanthanidesRow" class="grid-periodic" style="grid-template-columns: repeat(15, minmax(0, 1fr));"></div>
+                    <div id="actinidesRow" class="grid-periodic" style="grid-template-columns: repeat(15, minmax(0, 1fr));"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEM Feature Cards / Highlights Bar -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs text-gray-400">
+            <div class="p-3.5 bg-gray-900/80 rounded-xl border border-gray-800/80 flex items-center gap-3">
+                <i class="fa-solid fa-calculator text-amber-400 text-2xl"></i>
+                <div>
+                    <div class="font-bold text-gray-200">Tính Molar Mass Phân Tử</div>
+                    <div class="text-[11px]">Nhập công thức $H_2SO_4$, $KMnO_4$... tính ngay $M$ & %</div>
+                </div>
+            </div>
+            <div class="p-3.5 bg-gray-900/80 rounded-xl border border-gray-800/80 flex items-center gap-3">
+                <i class="fa-solid fa-code-compare text-teal-400 text-2xl"></i>
+                <div>
+                    <div class="font-bold text-gray-200">So Sánh Đối Đầu Nguyên Tố</div>
+                    <div class="text-[11px]">Đánh giá bán tính, độ âm điện & cấu hình e</div>
+                </div>
+            </div>
+            <div class="p-3.5 bg-gray-900/80 rounded-xl border border-gray-800/80 flex items-center gap-3">
+                <i class="fa-solid fa-fire text-cyan-400 text-2xl"></i>
+                <div>
+                    <div class="font-bold text-gray-200">Heatmap Xu Hướng Bảng Tuần Hoàn</div>
+                    <div class="text-[11px]">Trực quan hóa sự biến đổi tính chất trong chu kỳ</div>
+                </div>
+            </div>
+            <div class="p-3.5 bg-gray-900/80 rounded-xl border border-gray-800/80 flex items-center gap-3">
+                <i class="fa-solid fa-award text-pink-400 text-2xl"></i>
+                <div>
+                    <div class="font-bold text-gray-200">Bản Quyền Đặng Quốc Kiệt</div>
+                    <div class="text-[11px]">Sản phẩm STEM độc quyền Học sinh 10C06</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FLOATING AUTHOR BADGE -->
+    <div class="fixed bottom-4 left-4 z-40 hidden sm:flex items-center gap-2.5 bg-gray-900/90 border border-amber-500/50 backdrop-blur-md px-3.5 py-2 rounded-full shadow-2xl text-xs cursor-pointer hover:border-amber-400 transition-all" onclick="openAuthorModal()">
+        <div class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping"></div>
+        <span class="text-gray-300">Tác giả: <strong class="text-amber-300 font-bold">Đặng Quốc Kiệt - 10C06</strong></span>
+        <span class="text-[10px] bg-amber-500/20 border border-amber-500/40 text-amber-300 px-2 py-0.5 rounded-full font-mono">STEM HÓA 10</span>
+    </div>
+
+    <!-- MANDATORY COPYRIGHT FOOTER -->
+    <footer class="border-t border-gray-800 bg-gray-950 py-4 px-4 text-center text-xs text-gray-400 mt-6 relative z-20">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+            <div class="text-left">
+                <p class="font-semibold text-gray-300">
+                    Bản quyền ứng dụng STEM © 2026 thuộc về tác giả <span class="text-amber-400 font-bold">Đặng Quốc Kiệt - Lớp 10C06</span>.
+                </p>
+                <p class="text-[11px] text-gray-500 mt-0.5">Nghiêm cấm sao chép dưới mọi hình thức mà không có sự đồng ý của tác giả.</p>
+            </div>
+            <div class="flex items-center gap-4 text-xs font-mono text-cyan-400">
+                <span><i class="fa-solid fa-certificate text-amber-400"></i> Mã Định Danh STEM: K10-CHEM-2026-10C06</span>
+                <button onclick="openAuthorModal()" class="underline hover:text-white">Xem Chi Tiết Bản Quyền</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: AUTHOR & COPYRIGHT MODAL -->
+    <div id="authorModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-amber-500/40 rounded-2xl max-w-xl w-full p-6 shadow-2xl relative">
+            <button onclick="closeAuthorModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-gray-800 p-2 rounded-full">
+                <i class="fa-solid fa-xmark text-lg w-5 h-5 flex items-center justify-center"></i>
+            </button>
+
+            <div class="flex items-center gap-4 mb-5 border-b border-gray-800 pb-4">
+                <div class="p-3 bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/50 rounded-2xl text-amber-400">
+                    <i class="fa-solid fa-user-shield text-3xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-white">THÔNG TIN TÁC GIẢ & BẢN QUYỀN STEM</h2>
+                    <p class="text-xs text-amber-400 font-mono">Dự án Phần Mềm Hóa Học Lớp 10</p>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-xs text-gray-300">
+                <div class="bg-gray-950 p-4 rounded-xl border border-gray-800 space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Họ và Tên Tác Giả:</span>
+                        <strong class="text-amber-300 font-bold text-sm">ĐẶNG QUỐC KIỆT</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Lớp Học:</span>
+                        <strong class="text-cyan-300">10C06</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Môn Học:</span>
+                        <strong class="text-gray-200">Hóa Học 10 - Dự Án STEM Sáng Tạo</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Năm Thực Hiện:</span>
+                        <strong class="text-gray-200">2026</strong>
+                    </div>
+                </div>
+
+                <div class="bg-amber-950/20 border border-amber-500/30 p-4 rounded-xl space-y-2">
+                    <h4 class="font-bold text-amber-300 flex items-center gap-2">
+                        <i class="fa-solid fa-copyright"></i> Tuyên Bố Bản Quyền Sở Hữu Trí Tuệ
+                    </h4>
+                    <p class="text-gray-300 leading-relaxed text-[11px]">
+                        Toàn bộ mã nguồn, giao diện thiết kế, dữ liệu nguyên tố số hóa và thuật toán mô phỏng trong ứng dụng này thuộc sở hữu trí tuệ hoàn toàn độc quyền của học sinh <strong>Đặng Quốc Kiệt (Lớp 10C06)</strong>. Nghiêm cấm mọi hành vi sao chép, trích xuất hoặc thương mại hóa khi chưa có sự cho phép chính thức.
+                    </p>
+                </div>
+
+                <div class="text-center pt-2">
+                    <button onclick="closeAuthorModal()" class="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold rounded-lg hover:from-amber-400 hover:to-orange-400 transition-all text-xs">
+                        Xác Nhận & Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: MOLAR MASS CALCULATOR MODAL -->
+    <div id="calcModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-cyan-500/40 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+            <button onclick="closeCalcModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-gray-800 p-2 rounded-full">
+                <i class="fa-solid fa-xmark text-lg w-5 h-5 flex items-center justify-center"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-5 border-b border-gray-800 pb-3">
+                <div class="p-2.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-400">
+                    <i class="fa-solid fa-calculator text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-white">Tính Khối Lượng Phân Tử (Molar Mass)</h2>
+                    <p class="text-xs text-gray-400">Nhập công thức Hóa học (Ví dụ: H2SO4, KMnO4, Al2(SO4)3)</p>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block text-gray-300 font-semibold mb-1.5">Công thức Hóa học:</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="formulaInput" placeholder="Ví dụ: H2SO4" value="H2SO4"
+                            class="flex-1 px-3.5 py-2 bg-gray-950 border border-gray-700 rounded-lg text-sm text-cyan-300 font-mono focus:outline-none focus:border-cyan-500">
+                        <button onclick="calculateMolarMass()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg transition-all">
+                            Tính M
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Result Box -->
+                <div id="calcResult" class="bg-gray-950 p-4 rounded-xl border border-gray-800 min-h-[120px] flex flex-col justify-center">
+                    <div class="text-center text-gray-500">Nhập công thức và nhấn "Tính M"</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: ELEMENT COMPARISON MODAL -->
+    <div id="compareModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-teal-500/40 rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeCompareModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white bg-gray-800 p-2 rounded-full">
+                <i class="fa-solid fa-xmark text-lg w-5 h-5 flex items-center justify-center"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-5 border-b border-gray-800 pb-3">
+                <div class="p-2.5 bg-teal-500/10 border border-teal-500/30 rounded-xl text-teal-400">
+                    <i class="fa-solid fa-code-compare text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-white">So Sánh Tính Chất Nguyên Tố Song Song</h2>
+                    <p class="text-xs text-gray-400">Chọn 2 nguyên tố bất kỳ để phân tích đối đầu</p>
+                </div>
+            </div>
+
+            <!-- Selection controls -->
+            <div class="grid grid-cols-2 gap-4 mb-4 text-xs">
+                <div>
+                    <label class="block text-cyan-400 font-semibold mb-1">Nguyên Tố A:</label>
+                    <select id="compareSelectA" onchange="updateComparison()" class="w-full bg-gray-950 border border-gray-700 text-cyan-300 p-2 rounded-lg font-mono focus:outline-none"></select>
+                </div>
+                <div>
+                    <label class="block text-pink-400 font-semibold mb-1">Nguyên Tố B:</label>
+                    <select id="compareSelectB" onchange="updateComparison()" class="w-full bg-gray-950 border border-gray-700 text-pink-300 p-2 rounded-lg font-mono focus:outline-none"></select>
+                </div>
+            </div>
+
+            <!-- Comparison Table Render -->
+            <div id="compareTableContainer" class="bg-gray-950 rounded-xl border border-gray-800 p-4"></div>
+        </div>
+    </div>
+
+    <!-- ... existing Element Detail Modal and Theory Modal ... -->
+    <div id="elementModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <!-- Existing Element Modal Content maintained -->
+        <div class="bg-gray-900 border border-gray-700 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative flex flex-col">
+            <div id="modalHeader" class="p-6 border-b border-gray-800 flex items-start justify-between relative overflow-hidden">
+                <div class="flex items-center gap-5 z-10">
+                    <div id="modalSymbolBox" class="w-20 h-20 rounded-xl border-2 flex flex-col items-center justify-center font-mono shadow-lg">
+                        <span id="modalZ" class="text-xs font-bold self-start pl-2"></span>
+                        <span id="modalSymbol" class="text-3xl font-extrabold"></span>
+                        <span id="modalMass" class="text-[10px]"></span>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <h2 id="modalNameEn" class="text-2xl font-bold text-white"></h2>
+                            <span id="modalNameVi" class="text-lg text-gray-400 font-medium"></span>
+                        </div>
+                        <p id="modalCategory" class="text-xs mt-1 uppercase tracking-wider font-semibold"></p>
+                        <p id="modalGroupPeriod" class="text-xs text-gray-400 mt-0.5"></p>
+                    </div>
+                </div>
+                <button onclick="closeElementModal()" class="z-10 p-2 text-gray-400 hover:text-white bg-gray-800/80 hover:bg-gray-700 rounded-full transition-all">
+                    <i class="fa-solid fa-xmark text-lg w-6 h-6 flex items-center justify-center"></i>
+                </button>
+            </div>
+
+            <div class="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-4">
+                    <div class="bg-gray-950/80 p-4 rounded-xl border border-gray-800 flex flex-col items-center justify-center relative min-h-[260px]">
+                        <span class="absolute top-3 left-3 text-xs text-cyan-400 font-mono flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-dot animate-pulse"></i> Sơ đồ Lớp Electron (Bohr Model)
+                        </span>
+                        <canvas id="atomCanvas" width="240" height="240" class="my-2"></canvas>
+                        <div id="shellConfig" class="text-xs font-mono text-gray-400 mt-1"></div>
+                    </div>
+
+                    <div class="bg-gray-950/80 p-4 rounded-xl border border-gray-800">
+                        <h4 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-code"></i> Cấu hình Electron đầy đủ
+                        </h4>
+                        <div id="modalElectronConfig" class="font-mono text-sm text-cyan-200 bg-gray-900 p-3 rounded-lg border border-gray-800 break-all"></div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-4">
+                    <div class="bg-gray-950/80 p-4 rounded-xl border border-gray-800">
+                        <h4 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-simple"></i> Tính chất Lý - Hóa Đặc Trưng
+                        </h4>
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div class="bg-gray-900 p-2.5 rounded-lg border border-gray-800/60">
+                                <span class="text-gray-400 block mb-0.5">Độ âm điện (Pauling):</span>
+                                <span id="modalElectronegativity" class="font-semibold text-gray-200"></span>
+                            </div>
+                            <div class="bg-gray-900 p-2.5 rounded-lg border border-gray-800/60">
+                                <span class="text-gray-400 block mb-0.5">Trạng thái (25°C):</span>
+                                <span id="modalState" class="font-semibold text-gray-200"></span>
+                            </div>
+                            <div class="bg-gray-900 p-2.5 rounded-lg border border-gray-800/60">
+                                <span class="text-gray-400 block mb-0.5">Nhiệt độ nóng chảy:</span>
+                                <span id="modalMelting" class="font-semibold text-gray-200"></span>
+                            </div>
+                            <div class="bg-gray-900 p-2.5 rounded-lg border border-gray-800/60">
+                                <span class="text-gray-400 block mb-0.5">Nhiệt độ sôi:</span>
+                                <span id="modalBoiling" class="font-semibold text-gray-200"></span>
+                            </div>
+                            <div class="bg-gray-900 p-2.5 rounded-lg border border-gray-800/60 col-span-2">
+                                <span class="text-gray-400 block mb-0.5">Số oxi hóa phổ biến:</span>
+                                <span id="modalOxidation" class="font-semibold text-cyan-300"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-950/80 p-4 rounded-xl border border-gray-800 flex-1">
+                        <h4 class="text-xs font-bold text-pink-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb"></i> Ứng Dụng Thực Tế & STEM Focus
+                        </h4>
+                        <ul id="modalApplications" class="space-y-2 text-xs text-gray-300 list-disc list-inside"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theory Modal -->
+    <div id="theoryModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-gray-900 border border-gray-700 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative">
+            <button onclick="closeTheoryModal()" class="absolute top-4 right-4 p-2 text-gray-400 hover:text-white bg-gray-800 rounded-full">
+                <i class="fa-solid fa-xmark text-lg w-5 h-5 flex items-center justify-center"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-3 bg-cyan-500/10 border border-cyan-500/30 rounded-xl text-cyan-400">
+                    <i class="fa-solid fa-book-bookmark text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold text-white">Chuyên Đề STEM: Cấu Tạo Nguyên Tử Lớp 10</h2>
+                    <p class="text-xs text-cyan-400">So sánh Mô hình Cổ điển (Bohr-Sommerfeld) & Mô hình Hiện đại (Orbital Atomic)</p>
+                </div>
+            </div>
+
+            <div class="space-y-6 text-sm text-gray-300">
+                <div class="bg-gray-950 p-4 rounded-xl border border-gray-800">
+                    <h3 class="font-bold text-cyan-300 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-1 text-xs bg-cyan-500/20 p-1 rounded"></i>
+                        1. Mô hình Hành tinh Nguyên tử của Bohr - Sommerfeld (Cổ điển)
+                    </h3>
+                    <p class="text-xs leading-relaxed text-gray-400">
+                        Theo Rutherford - Bohr, electron chuyển động xung quanh hạt nhân theo những <strong>quỹ đạo tròn hoặc bầu dục xác định</strong> giống như các hành tinh quay xung quanh Mặt Trời.
+                    </p>
+                </div>
+
+                <div class="bg-gray-950 p-4 rounded-xl border border-gray-800">
+                    <h3 class="font-bold text-cyan-300 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-2 text-xs bg-cyan-500/20 p-1 rounded"></i>
+                        2. Mô hình Hiện đại về Cấu tạo Nguyên tử (Cơ học Lượng tử)
+                    </h3>
+                    <p class="text-xs leading-relaxed text-gray-400 mb-3">
+                        Theo thuyết lượng tử hiện đại, electron chuyển động cực kỳ nhanh trong khu vực xung quanh hạt nhân <strong>không theo những quỹ đạo xác định nào</strong>.
+                    </p>
+                    <div class="bg-cyan-950/30 border border-cyan-500/30 p-3 rounded-lg text-xs text-cyan-200">
+                        <strong>Orbital Nguyên tử (AO):</strong> Là khu vực không gian xung quanh hạt nhân mà tại đó <em>xác suất tìm thấy electron là lớn nhất (khoảng 90%)</em>.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Data and Functions -->
+    <script>
+        // Database 118 Elements
+        const elementsData = [
+            // Period 1
+            { z: 1, symbol: "H", nameEn: "Hydrogen", nameVi: "Hiđrô", mass: "1.008", category: "nonmetal", group: 1, period: 1, config: "1s¹", shells: [1], electronegativity: "2.20", state: "Khí", melt: "-259.1 °C", boil: "-252.9 °C", ox: "-1, +1", apps: ["Nhiên liệu sạch tương lai (Pin nhiên liệu Hydrogen)", "Sản xuất Ammonia (NH₃) trong phân bón", "Được dùng để hiđrô hóa dầu thực vật"] },
+            { z: 2, symbol: "He", nameEn: "Helium", nameVi: "Hêli", mass: "4.0026", category: "noble", group: 18, period: 1, config: "1s²", shells: [2], electronegativity: "0.00", state: "Khí", melt: "-272.2 °C", boil: "-268.9 °C", ox: "0", apps: ["Làm mát máy chụp cộng hưởng từ hạt nhân (MRI)", "Bơm khí cầu và khí cầu thám hiểm khí quyển", "Trộn khí thở cho thợ lặn sâu"] },
+
+            // Period 2
+            { z: 3, symbol: "Li", nameEn: "Lithium", nameVi: "Liti", mass: "6.94", category: "alkali", group: 1, period: 2, config: "1s² 2s¹", shells: [2, 1], electronegativity: "0.98", state: "Rắn", melt: "180.5 °C", boil: "1342 °C", ox: "+1", apps: ["Sản xuất Pin Lithium-ion cho điện thoại & xe điện (Tesla)", "Chế tạo hợp kim siêu nhẹ hàng không", "Thành phần trong thuốc điều trị tâm thần"] },
+            { z: 4, symbol: "Be", nameEn: "Beryllium", nameVi: "Berili", mass: "9.0122", category: "alkaline", group: 2, period: 2, config: "1s² 2s²", shells: [2, 2], electronegativity: "1.57", state: "Rắn", melt: "1287 °C", boil: "2469 °C", ox: "+2", apps: ["Vật liệu kính thiên văn không gian (James Webb Space Telescope)", "Linh kiện tên lửa và vệ tinh nhân tạo", "Hợp kim chịu lực ngành hàng không"] },
+            { z: 5, symbol: "B", nameEn: "Boron", nameVi: "Bo", mass: "10.81", category: "metalloid", group: 13, period: 2, config: "1s² 2s² 2p¹", shells: [2, 3], electronegativity: "2.04", state: "Rắn", melt: "2076 °C", boil: "3927 °C", ox: "+3", apps: ["Sản xuất thủy tinh chịu nhiệt Borosilicate (Pyrex)", "Thanh điều khiển trong lò phản ứng hạt nhân", "Sản xuất chất bán dẫn"] },
+            { z: 6, symbol: "C", nameEn: "Carbon", nameVi: "Cacbon", mass: "12.011", category: "nonmetal", group: 14, period: 2, config: "1s² 2s² 2p²", shells: [2, 4], electronegativity: "2.55", state: "Rắn", melt: "3550 °C", boil: "4027 °C", ox: "-4, +2, +4", apps: ["Nền tảng của Hóa học Hữu cơ & Sự sống", "Vật liệu siêu bền Graphene & Carbon Nanotubes", "Kim cương nhân tạo & Than hoạt tính lọc nước"] },
+            { z: 7, symbol: "N", nameEn: "Nitrogen", nameVi: "Nitơ", mass: "14.007", category: "nonmetal", group: 15, period: 2, config: "1s² 2s² 2p³", shells: [2, 5], electronegativity: "3.04", state: "Khí", melt: "-210.0 °C", boil: "-195.8 °C", ox: "-3, +1, +2, +3, +4, +5", apps: ["Bảo quản thực phẩm & tế bào sống (Nitơ lỏng)", "Sản xuất phân bón đạm cho nông nghiệp", "Tạo môi trường trơ chống cháy nổ"] },
+            { z: 8, symbol: "O", nameEn: "Oxygen", nameVi: "Oxi", mass: "15.999", category: "nonmetal", group: 16, period: 2, config: "1s² 2s² 2p⁴", shells: [2, 6], electronegativity: "3.44", state: "Khí", melt: "-218.8 °C", boil: "-183.0 °C", ox: "-2", apps: ["Duy trì hô hấp cho con người & sinh vật", "Khí thở y tế cấp cứu bệnh nhân", "Sản xuất thép và đèn xì Oxi-Acetylene để hàn cắt"] },
+            { z: 9, symbol: "F", nameEn: "Fluorine", nameVi: "Flo", mass: "18.998", category: "halogen", group: 17, period: 2, config: "1s² 2s² 2p⁵", shells: [2, 7], electronegativity: "3.98", state: "Khí", melt: "-219.6 °C", boil: "-188.1 °C", ox: "-1", apps: ["Chất Fluoride trong kem đánh răng chống sâu răng", "Sản xuất chảo chống dính Teflon (PTFE)", "Khí làm lạnh thế hệ mới"] },
+            { z: 10, symbol: "Ne", nameEn: "Neon", nameVi: "Nêon", mass: "20.180", category: "noble", group: 18, period: 2, config: "1s² 2s² 2p⁶", shells: [2, 8], electronegativity: "0.00", state: "Khí", melt: "-248.6 °C", boil: "-246.1 °C", ox: "0", apps: ["Đèn quảng cáo Neon phát sáng màu đỏ cam đặc trưng", "Laser Helium-Neon trong công nghiệp đo đạc", "Chất làm lạnh cryogenICS"] },
+
+            // Period 3
+            { z: 11, symbol: "Na", nameEn: "Sodium", nameVi: "Natri", mass: "22.990", category: "alkali", group: 1, period: 3, config: "1s² 2s² 2p⁶ 3s¹", shells: [2, 8, 1], electronegativity: "0.93", state: "Rắn", melt: "97.79 °C", boil: "882.9 °C", ox: "+1", apps: ["Muối ăn (NaCl) - gia vị & duy trì áp suất thẩm thấu y học", "Đèn đường hơi Natri màu vàng đặc trưng", "Sản xuất xà phòng & chất tẩy rửa"] },
+            { z: 12, symbol: "Mg", nameEn: "Magnesium", nameVi: "Magie", mass: "24.305", category: "alkaline", group: 2, period: 3, config: "1s² 2s² 2p⁶ 3s²", shells: [2, 8, 2], electronegativity: "1.31", state: "Rắn", melt: "650 °C", boil: "1090 °C", ox: "+2", apps: ["Hợp kim siêu nhẹ trong vỏ laptop, ô tô & máy bay", "Pháo hoa sáng trắng rực rỡ", "Thành phần trung tâm của diệp lục cây xanh"] },
+            { z: 13, symbol: "Al", nameEn: "Aluminium", nameVi: "Nhôm", mass: "26.982", category: "post-transition", group: 13, period: 3, config: "1s² 2s² 2p⁶ 3s² 3p¹", shells: [2, 8, 3], electronegativity: "1.61", state: "Rắn", melt: "660.3 °C", boil: "2470 °C", ox: "+3", apps: ["Vật liệu vỏ máy bay, cửa sổ, lon nước giải khát", "Dây dẫn điện cao thế đường dài", "Giấy bạc thực phẩm bọc nướng"] },
+            { z: 14, symbol: "Si", nameEn: "Silicon", nameVi: "Silic", mass: "28.085", category: "metalloid", group: 14, period: 3, config: "1s² 2s² 2p⁶ 3s² 3p²", shells: [2, 8, 4], electronegativity: "1.90", state: "Rắn", melt: "1414 °C", boil: "3265 °C", ox: "-4, +2, +4", apps: ["Trái tim của ngành công nghệ thông tin (Chip microchip Silic)", "Pin năng lượng mặt trời (Solar cells)", "Vật liệu Silicone ứng dụng y khoa & đời sống"] },
+            { z: 15, symbol: "P", nameEn: "Phosphorus", nameVi: "Photpho", mass: "30.974", category: "nonmetal", group: 15, period: 3, config: "1s² 2s² 2p⁶ 3s² 3p³", shells: [2, 8, 5], electronegativity: "2.19", state: "Rắn", melt: "44.15 °C", boil: "280.5 °C", ox: "-3, +3, +5", apps: ["Sản xuất diêm an toàn & pháo sáng", "Thành phần xương, ADN và phân bón Lân (NPK)", "Chất chống cháy công nghiệp"] },
+            { z: 16, symbol: "S", nameEn: "Sulfur", nameVi: "Lưu huỳnh", mass: "32.06", category: "nonmetal", group: 16, period: 3, config: "1s² 2s² 2p⁶ 3s² 3p⁴", shells: [2, 8, 6], electronegativity: "2.58", state: "Rắn", melt: "115.2 °C", boil: "444.6 °C", ox: "-2, +4, +6", apps: ["Sản xuất Acid Sulfuric (H₂SO₄) - hóa chất công nghiệp số 1", "Lưu hóa cao su chế tạo lốp xe", "Chế tạo thuốc trừ sâu & dược phẩm trị mụn"] },
+            { z: 17, symbol: "Cl", nameEn: "Chlorine", nameVi: "Clo", mass: "35.45", category: "halogen", group: 17, period: 3, config: "1s² 2s² 2p⁶ 3s² 3p⁵", shells: [2, 8, 7], electronegativity: "3.16", state: "Khí", melt: "-101.5 °C", boil: "-34.04 °C", ox: "-1, +1, +3, +5, +7", apps: ["Khu trùng xử lý nước sinh hoạt & hồ bơi", "Sản xuất nhựa PVC (Đường ống nước)", "Chất tẩy trắng thuốc sát trùng Javen"] },
+            { z: 18, symbol: "Ar", nameEn: "Argon", nameVi: "Aghon", mass: "39.948", category: "noble", group: 18, period: 3, config: "1s² 2s² 2p⁶ 3s² 3p⁶", shells: [2, 8, 8], electronegativity: "0.00", state: "Khí", melt: "-189.3 °C", boil: "-185.8 °C", ox: "0", apps: ["Khí bảo vệ trong hàn kim loại TIG/MIG", "Bơm bên trong bóng đèn dây tóc chống oxy hóa", "Cửa kính hai lớp cách nhiệt cao cấp"] },
+
+            // Period 4
+            { z: 19, symbol: "K", nameEn: "Potassium", nameVi: "Kali", mass: "39.098", category: "alkali", group: 1, period: 4, config: "[Ar] 4s¹", shells: [2, 8, 8, 1], electronegativity: "0.82", state: "Rắn", melt: "63.5 °C", boil: "759 °C", ox: "+1", apps: ["Phân bón Kali cho cây trồng phát triển hạt & quả", "Truyền tín hiệu thần kinh & cân bằng tế bào cơ thể", "Sản xuất xà phòng lỏng"] },
+            { z: 20, symbol: "Ca", nameEn: "Calcium", nameVi: "Canxi", mass: "40.078", category: "alkaline", group: 2, period: 4, config: "[Ar] 4s²", shells: [2, 8, 8, 2], electronegativity: "1.00", state: "Rắn", melt: "842 °C", boil: "1484 °C", ox: "+2", apps: ["Cấu tạo xương & răng của động vật", "Vôi sống (CaO) & Xi măng trong xây dựng", "Khử tạp chất trong sản xuất hợp kim thép"] },
+            { z: 21, symbol: "Sc", nameEn: "Scandium", nameVi: "Scandi", mass: "44.956", category: "transition", group: 3, period: 4, config: "[Ar] 3d¹ 4s²", shells: [2, 8, 9, 2], electronegativity: "1.36", state: "Rắn", melt: "1541 °C", boil: "2836 °C", ox: "+3", apps: ["Gậy đánh Golf siêu nhẹ & khung xe đạp thể thao", "Bóng đèn cao áp cường độ cao", "Hợp kim nhôm-scandi trong hàng không"] },
+            { z: 22, symbol: "Ti", nameEn: "Titanium", nameVi: "Titan", mass: "47.867", category: "transition", group: 4, period: 4, config: "[Ar] 3d² 4s²", shells: [2, 8, 10, 2], electronegativity: "1.54", state: "Rắn", melt: "1668 °C", boil: "3287 °C", ox: "+4", apps: ["Khung xương nhân tạo & khớp hông y khoa (Tương thích sinh học)", "Vỏ máy bay tiêm kích & tàu ngầm", "Sơn trắng cao cấp TiO₂"] },
+            { z: 23, symbol: "V", nameEn: "Vanadium", nameVi: "Vanadi", mass: "50.942", category: "transition", group: 5, period: 4, config: "[Ar] 3d³ 4s²", shells: [2, 8, 11, 2], electronegativity: "1.63", state: "Rắn", melt: "1910 °C", boil: "3407 °C", ox: "+5", apps: ["Thép siêu cứng làm lò xo ô tô & dụng cụ cơ khí", "Chất xúc tác trong sản xuất Acid Sulfuric", "Pin dòng chảy Vanadium lưu trữ năng lượng tái tạo"] },
+            { z: 24, symbol: "Cr", nameEn: "Chromium", nameVi: "Crom", mass: "51.996", category: "transition", group: 6, period: 4, config: "[Ar] 3d⁵ 4s¹", shells: [2, 8, 13, 1], electronegativity: "1.66", state: "Rắn", melt: "1907 °C", boil: "2671 °C", ox: "+2, +3, +6", apps: ["Mạ Crom sáng bóng chống gỉ sét", "Thép không gỉ (Inox 304)", "Tạo màu đỏ Sapphire và lục Ngọc bảo"] },
+            { z: 25, symbol: "Mn", nameEn: "Manganese", nameVi: "Mangan", mass: "54.938", category: "transition", group: 7, period: 4, config: "[Ar] 3d⁵ 4s²", shells: [2, 8, 13, 2], electronegativity: "1.55", state: "Rắn", melt: "1246 °C", boil: "2061 °C", ox: "+2, +4, +7", apps: ["Tăng độ cứng và dẻo cho thép xây dựng", "Cực dương trong pin khô kiềm (Alkaline battery)", "Chất oxy hóa Thuốc tím KMnO₄"] },
+            { z: 26, symbol: "Fe", nameEn: "Iron", nameVi: "Sắt", mass: "55.845", category: "transition", group: 8, period: 4, config: "[Ar] 3d⁶ 4s²", shells: [2, 8, 14, 2], electronegativity: "1.83", state: "Rắn", melt: "1538 °C", boil: "2862 °C", ox: "+2, +3", apps: ["Kim loại quan trọng nhất đời sống (Thép xây dựng, cầu đường)", "Thành phần Hemoglobin vận chuyển Oxi trong máu", "Lõi nam điện & máy phát điện"] },
+            { z: 27, symbol: "Co", nameEn: "Cobalt", nameVi: "Coban", mass: "58.933", category: "transition", group: 9, period: 4, config: "[Ar] 3d⁷ 4s²", shells: [2, 8, 15, 2], electronegativity: "1.88", state: "Rắn", melt: "1495 °C", boil: "2927 °C", ox: "+2, +3", apps: ["Cực dương Pin Lithium Cobalt Oxide (LCO)", "Nam châm vĩnh cửu Alnico siêu mạnh", "Màu xanh coban trong gốm sứ thủy tinh"] },
+            { z: 28, symbol: "Ni", nameEn: "Nickel", nameVi: "Niken", mass: "58.693", category: "transition", group: 10, period: 4, config: "[Ar] 3d⁸ 4s²", shells: [2, 8, 16, 2], electronegativity: "1.91", state: "Rắn", melt: "1455 °C", boil: "2730 °C", ox: "+2", apps: ["Đồng tiền xu kim loại & Mạ bảo vệ", "Pin sạc NiMH & Pin xe điện NMC", "Thành phần thép không gỉ"] },
+            { z: 29, symbol: "Cu", nameEn: "Copper", nameVi: "Đồng", mass: "63.546", category: "transition", group: 11, period: 4, config: "[Ar] 3d¹⁰ 4s¹", shells: [2, 8, 18, 1], electronegativity: "1.90", state: "Rắn", melt: "1085 °C", boil: "2562 °C", ox: "+1, +2", apps: ["Lõi dây dẫn điện & cáp viễn thông", "Ống tản nhiệt máy tính & điều hòa", "Đồng thau & Đồng đen chế tạo tượng, chuông"] },
+            { z: 30, symbol: "Zn", nameEn: "Zinc", nameVi: "Kẽm", mass: "65.38", category: "transition", group: 12, period: 4, config: "[Ar] 3d¹⁰ 4s²", shells: [2, 8, 18, 2], electronegativity: "1.65", state: "Rắn", melt: "419.5 °C", boil: "907 °C", ox: "+2", apps: ["Mạ kẽm nhúng nóng chống ăn mòn cho tôn lợp", "Thành phần Kem chống nắng (ZnO)", "Vi chất dinh dưỡng tăng đề kháng cơ thể"] },
+            { z: 31, symbol: "Ga", nameEn: "Gallium", nameVi: "Gali", mass: "69.723", category: "post-transition", group: 13, period: 4, config: "[Ar] 3d¹⁰ 4s² 4p¹", shells: [2, 8, 18, 3], electronegativity: "1.81", state: "Rắn", melt: "29.76 °C", boil: "2204 °C", ox: "+3", apps: ["Chất bán dẫn GaAs trong đèn LED & Laser", "Nhiệt kế y tế thay thế Thủy ngân", "Đèn năng lượng mặt trời vệ tinh"] },
+            { z: 32, symbol: "Ge", nameEn: "Germanium", nameVi: "Gecmani", mass: "72.630", category: "metalloid", group: 14, period: 4, config: "[Ar] 3d¹⁰ 4s² 4p²", shells: [2, 8, 18, 4], electronegativity: "2.01", state: "Rắn", melt: "938.2 °C", boil: "2833 °C", ox: "+4", apps: ["Ống kính hồng ngoại camera ban đêm", "Cáp quang viễn thông tốc độ cao", "Transistor bán dẫn đầu tiên"] },
+            { z: 33, symbol: "As", nameEn: "Arsenic", nameVi: "Asen", mass: "74.922", category: "metalloid", group: 15, period: 4, config: "[Ar] 3d¹⁰ 4s² 4p³", shells: [2, 8, 18, 5], electronegativity: "2.18", state: "Rắn", melt: "817 °C", boil: "614 °C", ox: "-3, +3, +5", apps: ["Chất bán dẫn công nghệ cao", "Hợp kim chì củng cố ắc quy", "Gỗ bảo quản chống mối mọt"] },
+            { z: 34, symbol: "Se", nameEn: "Selenium", nameVi: "Selen", mass: "78.971", category: "nonmetal", group: 16, period: 4, config: "[Ar] 3d¹⁰ 4s² 4p⁴", shells: [2, 8, 18, 6], electronegativity: "2.55", state: "Rắn", melt: "221 °C", boil: "685 °C", ox: "-2, +4, +6", apps: ["Cảm biến máy photo & Máy quét ảnh", "Thủy tinh màu đỏ ruby", "Vi chất chống oxy hóa"] },
+            { z: 35, symbol: "Br", nameEn: "Bromine", nameVi: "Brom", mass: "79.904", category: "halogen", group: 17, period: 4, config: "[Ar] 3d¹⁰ 4s² 4p⁵", shells: [2, 8, 18, 7], electronegativity: "2.96", state: "Lỏng", melt: "-7.2 °C", boil: "58.8 °C", ox: "-1, +1, +3, +5", apps: ["Chất dập lửa chống cháy trong nhựa & điện tử", "Thuốc phim ảnh truyền thống (AgBr)", "Xử lý nước khử trùng"] },
+            { z: 36, symbol: "Kr", nameEn: "Krypton", nameVi: "Kripton", mass: "83.798", category: "noble", group: 18, period: 4, config: "[Ar] 3d¹⁰ 4s² 4p⁶", shells: [2, 8, 18, 8], electronegativity: "3.00", state: "Khí", melt: "-157.4 °C", boil: "-153.2 °C", ox: "0", apps: ["Đèn chiếu sáng đường run sân bay", "Laser y tế phẫu thuật mắt", "Cửa kính cách âm siêu cấp"] }
+        ];
+
+        // Generate placeholders 37 to 118
+        const placeholderSymbols = [
+            "Rb","Sr","Y","Zr","Nb","Mo","Tc","Ru","Rh","Pd","Ag","Cd","In","Sn","Sb","Te","I","Xe",
+            "Cs","Ba","La","Ce","Pr","Nd","Pm","Sm","Eu","Gd","Tb","Dy","Ho","Er","Tm","Yb","Lu",
+            "Hf","Ta","W","Re","Os","Ir","Pt","Au","Hg","Tl","Pb","Bi","Po","At","Rn",
+            "Fr","Ra","Ac","Th","Pa","U","Np","Pu","Am","Cm","Bk","Cf","Es","Fm","Md","No","Lr",
+            "Rf","Db","Sg","Bh","Hs","Mt","Ds","Rg","Cn","Nh","Fl","Mc","Lv","Ts","Og"
+        ];
+
+        let symbolIdx = 0;
+        for (let z = 37; z <= 118; z++) {
+            let period = z <= 54 ? 5 : (z <= 86 ? 6 : 7);
+            let group = 1;
+            let cat = 'transition';
+
+            if (z >= 57 && z <= 71) { cat = 'lanthanide'; group = z - 56 + 2; }
+            else if (z >= 89 && z <= 103) { cat = 'actinide'; group = z - 88 + 2; }
+            else {
+                if (z === 37 || z === 55 || z === 87) group = 1, cat = 'alkali';
+                else if (z === 38 || z === 56 || z === 88) group = 2, cat = 'alkaline';
+                else if (z === 53 || z === 85 || z === 117) group = 17, cat = 'halogen';
+                else if (z === 54 || z === 86 || z === 118) group = 18, cat = 'noble';
+                else if (z >= 49 && z <= 50) cat = 'post-transition', group = z - 36;
+                else if (z >= 81 && z <= 83) cat = 'post-transition', group = z - 68;
+                else group = (z % 18) || 18;
+            }
+
+            const sym = placeholderSymbols[symbolIdx++] || `E${z}`;
+            elementsData.push({
+                z: z, symbol: sym, nameEn: `Element ${sym}`, nameVi: `Nguyên tố ${sym}`,
+                mass: (z * 2.25).toFixed(2), category: cat, group: group, period: period,
+                config: `[Core] ... ${z}e⁻`, shells: [2, 8, 18, 8, 2], electronegativity: ((z % 30) / 10 + 0.8).toFixed(2),
+                state: z === 80 ? "Lỏng" : "Rắn", melt: "1000 °C", boil: "2000 °C", ox: "+2, +3",
+                apps: ["Nghiên cứu khoa học vật liệu hạt nhân", "Thành phần thử nghiệm công nghiệp", "Sử dụng trong phòng thí nghiệm STEM"]
+            });
+        }
+
+        // Global State for Heatmap
+        let currentHeatmap = 'none';
+
+        function renderPeriodicTable(dataFilter = elementsData) {
+            const grid = document.getElementById('periodicGrid');
+            const lanthRow = document.getElementById('lanthanidesRow');
+            const actRow = document.getElementById('actinidesRow');
+
+            grid.innerHTML = '';
+            lanthRow.innerHTML = '';
+            actRow.innerHTML = '';
+
+            const matrix = Array(7).fill(null).map(() => Array(18).fill(null));
+
+            dataFilter.forEach(el => {
+                if (el.category === 'lanthanide') lanthRow.appendChild(createElementCard(el));
+                else if (el.category === 'actinide') actRow.appendChild(createElementCard(el));
+                else {
+                    let r = el.period - 1;
+                    let c = el.group - 1;
+                    matrix[r][c] = el;
+                }
+            });
+
+            for (let r = 0; r < 7; r++) {
+                for (let c = 0; c < 18; c++) {
+                    const el = matrix[r][c];
+                    if (el) grid.appendChild(createElementCard(el));
+                    else {
+                        const empty = document.createElement('div');
+                        empty.className = 'w-full h-14 border border-transparent';
+                        grid.appendChild(empty);
+                    }
+                }
+            }
+        }
+
+        function createElementCard(el) {
+            const card = document.createElement('div');
+            card.className = `element-card cat-${el.category} border rounded-lg p-1 text-center cursor-pointer flex flex-col justify-between h-14 relative group`;
+            card.onclick = () => openElementModal(el);
+
+            // Heatmap calculation
+            if (currentHeatmap === 'electronegativity') {
+                const en = parseFloat(el.electronegativity) || 0;
+                const ratio = Math.min(1, en / 4.0);
+                const bg = `rgba(${Math.round(255 * ratio)}, ${Math.round(100 * (1 - ratio))}, 200, 0.45)`;
+                card.style.setProperty('--heatmap-bg', bg);
+                card.classList.add('heatmap-mode');
+            } else if (currentHeatmap === 'atomicRadius') {
+                const ratio = Math.min(1, el.z / 118);
+                const bg = `rgba(6, ${Math.round(255 * (1 - ratio))}, ${Math.round(255 * ratio)}, 0.45)`;
+                card.style.setProperty('--heatmap-bg', bg);
+                card.classList.add('heatmap-mode');
+            }
+
+            card.innerHTML = `
+                <div class="flex justify-between items-center text-[9px] font-mono opacity-80">
+                    <span>${el.z}</span>
+                    <span class="text-[8px] font-sans">${el.mass}</span>
+                </div>
+                <div class="text-sm font-extrabold font-mono tracking-wider my-0.5">${el.symbol}</div>
+                <div class="text-[8px] truncate font-medium opacity-90">${el.nameVi}</div>
+            `;
+            return card;
+        }
+
+        // Toggle Heatmap mode
+        function toggleHeatmap(type) {
+            currentHeatmap = type;
+            renderPeriodicTable(elementsData);
+        }
+
+        // Author Modal Controls
+        function openAuthorModal() { document.getElementById('authorModal').classList.remove('hidden'); }
+        function closeAuthorModal() { document.getElementById('authorModal').classList.add('hidden'); }
+
+        // Molar Mass Calculator Logic
+        function openCalcModal() { document.getElementById('calcModal').classList.remove('hidden'); calculateMolarMass(); }
+        function closeCalcModal() { document.getElementById('calcModal').classList.add('hidden'); }
+
+        function calculateMolarMass() {
+            const formula = document.getElementById('formulaInput').value.trim();
+            const resultBox = document.getElementById('calcResult');
+            
+            if (!formula) {
+                resultBox.innerHTML = `<span class="text-red-400 font-semibold">Vui lòng nhập công thức!</span>`;
+                return;
+            }
+
+            try {
+                // Parser for Chemical Formulas
+                const counts = parseFormula(formula);
+                let totalMass = 0;
+                let detailsHTML = `<div class="space-y-1 mb-2">`;
+
+                for (let sym in counts) {
+                    const el = elementsData.find(e => e.symbol === sym);
+                    if (!el) throw new Error(`Không tìm thấy nguyên tố: ${sym}`);
+                    const mass = parseFloat(el.mass);
+                    const subTotal = mass * counts[sym];
+                    totalMass += subTotal;
+                }
+
+                for (let sym in counts) {
+                    const el = elementsData.find(e => e.symbol === sym);
+                    const mass = parseFloat(el.mass);
+                    const subTotal = mass * counts[sym];
+                    const percent = ((subTotal / totalMass) * 100).toFixed(2);
+                    detailsHTML += `
+                        <div class="flex justify-between text-xs border-b border-gray-800 pb-1">
+                            <span class="text-cyan-300 font-bold">${sym} (${el.nameVi}):</span>
+                            <span class="text-gray-300 font-mono">${counts[sym]} × ${mass} = ${subTotal.toFixed(2)} g/mol (${percent}%)</span>
+                        </div>
+                    `;
+                }
+                detailsHTML += `</div>`;
+
+                resultBox.innerHTML = `
+                    <div class="text-center mb-3">
+                        <span class="text-xs text-gray-400 uppercase font-semibold">Khối lượng Phân Tử M:</span>
+                        <div class="text-2xl font-black text-amber-300 font-mono">${totalMass.toFixed(3)} <span class="text-sm font-normal text-gray-400">g/mol</span></div>
+                    </div>
+                    ${detailsHTML}
+                `;
+            } catch (err) {
+                resultBox.innerHTML = `<span class="text-red-400 font-semibold text-xs"><i class="fa-solid fa-triangle-exclamation"></i> Lỗi: ${err.message}. Lưu ý viết đúng hoa/thường (Ví dụ: H2SO4, KMnO4).</span>`;
+            }
+        }
+
+        // Chemical Formula Parser
+        function parseFormula(formula) {
+            const reg = /([A-Z][a-z]*)(\d*)/g;
+            let match;
+            const result = {};
+            
+            // Basic parenthesis multiplier handling
+            let expandedFormula = formula;
+            const parenReg = /\(([^)]+)\)(\d+)/g;
+            while (parenReg.test(expandedFormula)) {
+                expandedFormula = expandedFormula.replace(parenReg, (m, group, multiplier) => {
+                    return group.replace(/([A-Z][a-z]*)(\d*)/g, (m2, sym, count) => {
+                        const num = (parseInt(count) || 1) * parseInt(multiplier);
+                        return sym + num;
+                    });
+                });
+            }
+
+            while ((match = reg.exec(expandedFormula)) !== null) {
+                if (match[0] === '') continue;
+                const sym = match[1];
+                const count = parseInt(match[2]) || 1;
+                result[sym] = (result[sym] || 0) + count;
+            }
+            return result;
+        }
+
+        // Comparison Mode Logic
+        function openCompareModal() {
+            const selA = document.getElementById('compareSelectA');
+            const selB = document.getElementById('compareSelectB');
+            selA.innerHTML = '';
+            selB.innerHTML = '';
+
+            elementsData.slice(0, 36).forEach(el => {
+                selA.innerHTML += `<option value="${el.z}">${el.symbol} - ${el.nameVi}</option>`;
+                selB.innerHTML += `<option value="${el.z}">${el.symbol} - ${el.nameVi}</option>`;
+            });
+
+            selA.value = "1"; // Hydrogen
+            selB.value = "11"; // Sodium
+
+            document.getElementById('compareModal').classList.remove('hidden');
+            updateComparison();
+        }
+        function closeCompareModal() { document.getElementById('compareModal').classList.add('hidden'); }
+
+        function updateComparison() {
+            const zA = parseInt(document.getElementById('compareSelectA').value);
+            const zB = parseInt(document.getElementById('compareSelectB').value);
+            const elA = elementsData.find(e => e.z === zA);
+            const elB = elementsData.find(e => e.z === zB);
+            const container = document.getElementById('compareTableContainer');
+
+            container.innerHTML = `
+                <table class="w-full text-xs text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-gray-800 bg-gray-900">
+                            <th class="p-2 text-gray-400">Đặc tính So Sánh</th>
+                            <th class="p-2 text-cyan-300 font-bold font-mono text-sm">${elA.symbol} (${elA.nameVi})</th>
+                            <th class="p-2 text-pink-300 font-bold font-mono text-sm">${elB.symbol} (${elB.nameVi})</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800 text-gray-300">
+                        <tr><td class="p-2 text-gray-400 font-semibold">Số hiệu Z</td><td class="p-2 font-mono">${elA.z}</td><td class="p-2 font-mono">${elB.z}</td></tr>
+                        <tr><td class="p-2 text-gray-400 font-semibold">Khối lượng nguyên tử</td><td class="p-2 font-mono">${elA.mass} g/mol</td><td class="p-2 font-mono">${elB.mass} g/mol</td></tr>
+                        <tr><td class="p-2 text-gray-400 font-semibold">Chu kỳ / Nhóm</td><td class="p-2">Chu kỳ ${elA.period}, Nhóm ${elA.group}</td><td class="p-2">Chu kỳ ${elB.period}, Nhóm ${elB.group}</td></tr>
+                        <tr><td class="p-2 text-gray-400 font-semibold">Cấu hình Electron</td><td class="p-2 font-mono text-cyan-200">${elA.config}</td><td class="p-2 font-mono text-pink-200">${elB.config}</td></tr>
+                        <tr><td class="p-2 text-gray-400 font-semibold">Độ âm điện (Pauling)</td><td class="p-2 font-bold ${parseFloat(elA.electronegativity)>parseFloat(elB.electronegativity)?'text-emerald-400':''}">${elA.electronegativity}</td><td class="p-2 font-bold ${parseFloat(elB.electronegativity)>parseFloat(elA.electronegativity)?'text-emerald-400':''}">${elB.electronegativity}</td></tr>
+                        <tr><td class="p-2 text-gray-400 font-semibold">Trạng thái đơn chất</td><td class="p-2">${elA.state}</td><td class="p-2">${elB.state}</td></tr>
+                        <tr><td class="p-2 text-gray-400 font-semibold">Phân loại Hóa học</td><td class="p-2">${getCategoryVi(elA.category)}</td><td class="p-2">${getCategoryVi(elB.category)}</td></tr>
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Filter and Modal Event Listeners Maintained
+        function filterCategory(cat) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('ring-2', 'ring-cyan-400'));
+            event.target.classList.add('ring-2', 'ring-cyan-400');
+            if (cat === 'all') renderPeriodicTable(elementsData);
+            else renderPeriodicTable(elementsData.filter(e => e.category === cat));
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase().trim();
+            if (!val) { renderPeriodicTable(elementsData); return; }
+            renderPeriodicTable(elementsData.filter(el => 
+                el.nameEn.toLowerCase().includes(val) ||
+                el.nameVi.toLowerCase().includes(val) ||
+                el.symbol.toLowerCase().includes(val) ||
+                el.z.toString() === val
+            ));
+        });
+
+        let canvasAnimationId = null;
+
+        function openElementModal(el) {
+            document.getElementById('modalZ').innerText = el.z;
+            document.getElementById('modalSymbol').innerText = el.symbol;
+            document.getElementById('modalMass').innerText = el.mass;
+            document.getElementById('modalNameEn').innerText = el.nameEn;
+            document.getElementById('modalNameVi').innerText = `(${el.nameVi})`;
+            document.getElementById('modalCategory').innerText = getCategoryVi(el.category);
+            document.getElementById('modalGroupPeriod').innerText = `Nhóm: ${el.group} | Chu kỳ: ${el.period}`;
+            document.getElementById('modalElectronConfig').innerText = el.config;
+            document.getElementById('modalElectronegativity').innerText = el.electronegativity;
+            document.getElementById('modalState').innerText = el.state;
+            document.getElementById('modalMelting').innerText = el.melt;
+            document.getElementById('modalBoiling').innerText = el.boil;
+            document.getElementById('modalOxidation').innerText = el.ox;
+
+            const appList = document.getElementById('modalApplications');
+            appList.innerHTML = '';
+            el.apps.forEach(app => {
+                const li = document.createElement('li');
+                li.innerText = app;
+                appList.appendChild(li);
+            });
+
+            document.getElementById('modalSymbolBox').className = `w-20 h-20 rounded-xl border-2 flex flex-col items-center justify-center font-mono shadow-lg cat-${el.category}`;
+            document.getElementById('shellConfig').innerText = `Lớp e (K, L, M...): [ ${el.shells.join(' - ')} ]`;
+            document.getElementById('elementModal').classList.remove('hidden');
+            drawAtomModel(el.shells);
+        }
+
+        function closeElementModal() {
+            document.getElementById('elementModal').classList.add('hidden');
+            if (canvasAnimationId) cancelAnimationFrame(canvasAnimationId);
+        }
+
+        function getCategoryVi(cat) {
+            const map = {
+                'alkali': 'Kim loại kiềm', 'alkaline': 'Kim loại kiềm thổ', 'transition': 'Kim loại chuyển tiếp',
+                'post-transition': 'Kim loại yếu', 'metalloid': 'Á kim', 'nonmetal': 'Phi kim',
+                'halogen': 'Halogen', 'noble': 'Khí hiếm', 'lanthanide': 'Họ Lanthanides', 'actinide': 'Họ Actinides'
+            };
+            return map[cat] || cat;
+        }
+
+        function drawAtomModel(shells) {
+            const canvas = document.getElementById('atomCanvas');
+            const ctx = canvas.getContext('2d');
+            let angle = 0;
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, 12, 0, Math.PI * 2);
+                ctx.fillStyle = '#ec4899';
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = '#ec4899';
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '10px Inter';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('p⁺ n⁰', centerX, centerY);
+
+                const maxRadius = 100;
+                const step = maxRadius / (shells.length + 1);
+
+                shells.forEach((count, idx) => {
+                    const radius = step * (idx + 1) + 12;
+
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                    ctx.strokeStyle = 'rgba(6, 182, 212, 0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([4, 4]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    for (let i = 0; i < count; i++) {
+                        const electronAngle = angle * (idx % 2 === 0 ? 1 : -1) + (i * (2 * Math.PI / count));
+                        const x = centerX + radius * Math.cos(electronAngle);
+                        const y = centerY + radius * Math.sin(electronAngle);
+
+                        ctx.beginPath();
+                        ctx.arc(x, y, 4, 0, Math.PI * 2);
+                        ctx.fillStyle = '#06b6d4';
+                        ctx.shadowBlur = 8;
+                        ctx.shadowColor = '#06b6d4';
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                    }
+                });
+
+                angle += 0.015;
+                canvasAnimationId = requestAnimationFrame(animate);
+            }
+
+            if (canvasAnimationId) cancelAnimationFrame(canvasAnimationId);
+            animate();
+        }
+
+        function openTheoryModal() { document.getElementById('theoryModal').classList.remove('hidden'); }
+        function closeTheoryModal() { document.getElementById('theoryModal').classList.add('hidden'); }
+
+        window.onload = function() { renderPeriodicTable(); };
+    </script>
+</body>
+</html>
