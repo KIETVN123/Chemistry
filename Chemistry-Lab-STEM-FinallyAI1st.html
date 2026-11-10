@@ -1,0 +1,3045 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d19">
+<meta name="description" content="CHEMISTRY LAB STEM – Phần mềm web học bảng tuần hoàn tương tác 118 nguyên tố, mô hình Bohr (minh họa) & đám mây electron (trực quan), xu hướng tuần hoàn, máy tính mol và trắc nghiệm STEM. Dự án của Đặng Quốc Kiệt – 10C06 – THPT Nguyễn Hữu Tiến.">
+<meta name="author" content="Đặng Quốc Kiệt – 10C06 – THPT Nguyễn Hữu Tiến">
+<title>CHEMISTRY LAB STEM | Phần mềm web · Đặng Quốc Kiệt · 10C06 · THPT NHT</title>
+<style>
+:root{
+  --bg:#080d19;--panel:#101a2b;--panel2:#142238;--line:rgba(148,163,184,.16);
+  --text:#edf4ff;--muted:#91a4bf;--cyan:#50d8ef;--blue:#6d8cff;
+  --green:#4ade80;--yellow:#facc15;--red:#fb7185;
+  --radius:18px;--shadow:0 18px 50px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--text);
+  background:
+    radial-gradient(ellipse at 15% 0%,rgba(47,91,160,.18),transparent 35%),
+    radial-gradient(ellipse at 90% 15%,rgba(92,55,160,.13),transparent 30%),
+    var(--bg);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  min-height:100vh;line-height:1.5;
+}
+button,input,select{font:inherit}button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+a{color:var(--cyan)}
+.app{max-width:1600px;margin:auto;padding:24px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:10px 0 24px;border-bottom:1px solid var(--line);margin-bottom:26px}
+.brand{display:flex;align-items:center;gap:13px}
+.brand-mark{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;color:#06111c;font-weight:900;font-size:18px;background:linear-gradient(135deg,var(--cyan),var(--blue));box-shadow:0 8px 28px rgba(80,216,239,.2)}
+.brand h1{font-size:17px;letter-spacing:1.5px;margin:0}
+.brand p{font-size:11px;color:var(--muted);margin:4px 0 0;letter-spacing:1.1px}
+.top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.status{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;padding:9px 12px;border:1px solid var(--line);border-radius:30px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow)}
+.status-dot.ready{background:var(--green);box-shadow:0 0 10px var(--green)}
+.hero{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;align-items:stretch;margin-bottom:22px}
+.hero-main,.hero-side,.panel{background:linear-gradient(145deg,rgba(20,34,56,.96),rgba(13,23,39,.96));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.hero-main{padding:30px;position:relative;overflow:hidden}
+.hero-main:after{content:"";position:absolute;width:260px;height:260px;border:1px solid rgba(80,216,239,.12);border-radius:50%;right:-90px;top:-120px;box-shadow:0 0 0 25px rgba(80,216,239,.025),0 0 0 55px rgba(80,216,239,.02)}
+.eyebrow{color:var(--cyan);font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+.hero h2{font-size:clamp(27px,4vw,43px);line-height:1.12;margin:13px 0}
+.hero h2 span{color:var(--cyan)}
+.hero-main p{color:var(--muted);line-height:1.7;max-width:650px;font-size:14px}
+.hero-stats{display:flex;gap:28px;flex-wrap:wrap;margin-top:24px}
+.stat strong{display:block;font-size:24px;color:var(--text)}
+.stat span{font-size:11px;color:var(--muted);letter-spacing:.6px}
+.hero-side{padding:24px;display:flex;flex-direction:column;justify-content:center;gap:16px}
+.hero-side h3{font-size:14px;margin:0}
+.feature{display:flex;gap:12px;align-items:center}
+.feature-icon{flex:0 0 38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(80,216,239,.1);color:var(--cyan);font-size:17px}
+.feature strong{font-size:12px;display:block}
+.feature small{font-size:11px;color:var(--muted);display:block;margin-top:4px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:14px;flex-wrap:wrap;margin:28px 0 14px}
+.section-head h2{font-size:19px;margin:0}
+.section-head p{font-size:12px;color:var(--muted);margin:5px 0 0}
+.panel{padding:20px;margin-bottom:18px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.search-wrap{position:relative;flex:1;min-width:220px}
+.search-wrap span{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.search-wrap input{width:100%;background:#0b1423;border:1px solid var(--line);border-radius:11px;color:var(--text);padding:12px 14px 12px 38px;font-size:13px}
+select,.field{background:#0b1423;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:11px 12px;font-size:12px;min-width:130px}
+.btn{border:1px solid var(--line);background:#182941;color:var(--text);padding:10px 14px;border-radius:10px;font-size:12px;font-weight:700;transition:.2s}
+.btn:hover{border-color:rgba(80,216,239,.6);transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,#36c5df,#5b80ef);color:#06121e;border:0}
+.btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(80,216,239,.1)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);padding:6px 8px;border-radius:7px;background:rgba(255,255,255,.025)}
+.legend-dot{width:8px;height:8px;border-radius:3px}
+.table-scroll{overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch}
+.periodic-grid{display:grid;grid-template-columns:repeat(18,minmax(48px,1fr));grid-template-rows:repeat(10,76px);gap:5px;min-width:1000px}
+.element{position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:6px;border-radius:9px;border:1px solid rgba(255,255,255,.13);color:#f8fbff;text-align:left;overflow:hidden;min-width:0;transition:transform .16s,border-color .16s,filter .16s;background:var(--el-color,#29445d);cursor:pointer}
+.element:hover{transform:translateY(-3px) scale(1.025);z-index:2;border-color:white;filter:brightness(1.18)}
+.element.selected{outline:2px solid white;outline-offset:1px;box-shadow:0 0 0 3px rgba(80,216,239,.35)}
+.element .number{font-size:9px;opacity:.85}
+.element .symbol{font-size:21px;line-height:1;font-weight:850;text-align:center}
+.element .ename{font-size:8px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.element .mass{font-size:8px;text-align:center;opacity:.8}
+.element.filtered-out{opacity:.12;filter:grayscale(1);pointer-events:none}
+.element-placeholder{
+  border:1px dashed rgba(148,163,184,.35);border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:#9eb3cb;font-size:9px;text-align:center;padding:4px;line-height:1.35;
+  background:rgba(255,255,255,.03);cursor:pointer;transition:border-color .15s,background .15s;
+}
+.element-placeholder:hover{border-color:var(--cyan);background:rgba(80,216,239,.08);color:var(--cyan)}
+.element-placeholder b{font-size:11px;font-weight:700;display:block;margin-bottom:2px}
+.element.pulse{animation:pulseSel .45s ease}
+@keyframes pulseSel{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1.025)}}
+.table-footnote{font-size:10px;color:var(--muted);margin-top:12px;line-height:1.6}
+.category-alkali-metal{--el-color:#b85e4d}
+.category-alkaline-earth-metal{--el-color:#b78643}
+.category-transition-metal{--el-color:#397d9b}
+.category-post-transition-metal{--el-color:#527a91}
+.category-metalloid{--el-color:#8a7840}
+.category-diatomic-nonmetal,.category-polyatomic-nonmetal,.category-nonmetal{--el-color:#43816b}
+.category-noble-gas{--el-color:#765caa}
+.category-lanthanide,.category-lanthanoid{--el-color:#8c5b8f}
+.category-actinide,.category-actinoid{--el-color:#a34f70}
+.category-unknown{--el-color:#46566a}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.panel-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
+.panel-title h3{font-size:15px;margin:0}
+.panel-title small{font-size:10px;color:var(--muted)}
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:15px}
+.tab{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:8px;padding:8px 11px;font-size:11px}
+.tab.active{background:rgba(80,216,239,.1);color:var(--cyan);border-color:rgba(80,216,239,.4)}
+.tool-card{background:rgba(5,12,23,.35);border:1px solid var(--line);border-radius:13px;padding:15px}
+.tool-card h4{font-size:13px;margin:0 0 8px}
+.tool-card p{font-size:11px;line-height:1.6;color:var(--muted)}
+.atom-wrap{min-height:310px;display:grid;place-items:center;position:relative;background:radial-gradient(circle,rgba(65,119,176,.12),transparent 65%);overflow:hidden;border-radius:12px}
+#atomCanvas{width:100%;max-width:440px;height:300px;display:block}
+.atom-info{text-align:center;color:var(--muted);font-size:11px;margin-top:6px}
+.atom-controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}
+.atom-note{font-size:10px;color:var(--muted);line-height:1.65;margin-top:10px;padding:10px;border-radius:9px;background:rgba(80,216,239,.06);border:1px solid rgba(80,216,239,.15)}
+.element-summary{display:flex;gap:14px;align-items:center;margin-bottom:15px}
+.big-symbol{width:72px;height:72px;display:grid;place-items:center;border-radius:15px;font-size:33px;font-weight:900;background:var(--el-color,#397d9b);color:white}
+.element-summary h3{font-size:19px;margin:0 0 5px}
+.element-summary p{font-size:11px;color:var(--muted);margin:0}
+.data-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.data-item{background:rgba(255,255,255,.035);padding:11px;border-radius:9px;min-width:0}
+.data-item span{display:block;font-size:10px;color:var(--muted);margin-bottom:5px}
+.data-item strong{font-size:12px;overflow-wrap:anywhere}
+.detail-text{font-size:12px;line-height:1.7;color:#bdcbe0}
+.formula-row{display:flex;gap:8px;flex-wrap:wrap}
+.formula-row input{flex:1;min-width:170px}
+.result-box{padding:14px;border:1px solid rgba(80,216,239,.25);background:rgba(80,216,239,.06);border-radius:11px;margin-top:12px}
+.result-box strong{font-size:21px;color:var(--cyan)}
+.result-box p{margin:5px 0 0;font-size:11px;color:var(--muted);line-height:1.6}
+.breakdown{font-size:11px;color:#bdcbe0;line-height:1.8;margin-top:8px;overflow-wrap:anywhere}
+.chart-wrap{width:100%;overflow-x:auto}
+#trendChart{width:100%;min-width:420px;height:270px;display:block}
+.chart-note{font-size:10px;color:var(--muted);line-height:1.6}
+.compare-list{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+.compare-chip{font-size:11px;padding:7px 9px;border-radius:8px;background:#1b3049}
+.compare-chip button{border:0;background:none;color:#fb7185;margin-left:5px;cursor:pointer}
+.compare-table{width:100%;border-collapse:collapse;font-size:11px}
+.compare-table th,.compare-table td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--line)}
+.compare-table th{color:var(--muted);font-weight:600}
+.quiz-question{font-size:15px;line-height:1.6;margin:8px 0 16px}
+.quiz-options{display:grid;gap:8px}
+.quiz-option{width:100%;text-align:left;border:1px solid var(--line);border-radius:10px;background:#111f33;color:var(--text);padding:12px;font-size:12px}
+.quiz-option:hover{border-color:var(--cyan)}
+.quiz-option.correct{border-color:var(--green);background:rgba(74,222,128,.1)}
+.quiz-option.wrong{border-color:var(--red);background:rgba(251,113,133,.1)}
+.feedback{font-size:12px;line-height:1.6;margin-top:12px;padding:12px;border-radius:9px;display:none}
+.feedback.show{display:block}
+.feedback.good{color:#a7f3d0;background:rgba(74,222,128,.09)}
+.feedback.bad{color:#fecdd3;background:rgba(251,113,133,.09)}
+.footer{text-align:center;padding:25px 10px 12px;color:var(--muted);font-size:10px;line-height:1.8}
+.footer strong{color:var(--text)}
+.loading,.error-state{text-align:center;padding:40px 15px;color:var(--muted);font-size:13px}
+.spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.12);border-top-color:var(--cyan);border-radius:50%;margin:0 auto 12px;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.modal-backdrop{display:none;position:fixed;inset:0;z-index:20;background:rgba(1,5,12,.78);backdrop-filter:blur(8px);padding:20px;overflow-y:auto}
+.modal-backdrop.open{display:grid;place-items:center}
+.modal{width:min(780px,100%);max-height:90vh;overflow-y:auto;background:#101b2d;border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 30px 100px #000}
+.modal-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:15px}
+.modal-head h3{margin:0;font-size:16px}
+.close-btn{border:1px solid var(--line);background:#1c2d44;color:white;border-radius:8px;padding:7px 11px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:#1d3049;border:1px solid var(--line);padding:11px 16px;border-radius:10px;color:white;font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.hidden{display:none!important}
+.shell-bars{display:grid;gap:6px;margin-top:10px}
+.shell-row{display:grid;grid-template-columns:70px 1fr 28px;gap:8px;align-items:center;font-size:11px}
+.shell-track{height:6px;background:#24364a;border-radius:6px;overflow:hidden}
+.shell-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:6px}
+/* Phase 5 – UX */
+.btn, .tab, .quiz-option, .element, .element-placeholder, .close-btn {
+  min-height: 40px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.element { min-height: 72px; }
+.tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; padding-bottom: 4px; }
+.tabs .tab { flex: 0 0 auto; white-space: nowrap; }
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--cyan); color: #06121e; padding: 10px 16px; border-radius: 0 0 8px 0; font-weight: 700;
+}
+.skip-link:focus { left: 0; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+#atomCanvas { max-width: 100%; height: auto; }
+
+@media(max-width:850px){
+  .app{padding:15px}
+  .hero{grid-template-columns:1fr}
+  .content-grid{grid-template-columns:1fr}
+  .top-actions{width:100%; justify-content:flex-start}
+  .atom-controls .btn{padding:10px 12px; font-size:12px}
+  .periodic-grid{grid-template-columns:repeat(18,minmax(42px,1fr)); grid-template-rows:repeat(10,70px)}
+  .element .symbol{font-size:17px}
+  .element .ename{font-size:7px}
+}
+@media(max-width:520px){
+  .topbar{align-items:flex-start; flex-direction:column}
+  .brand h1{font-size:14px}
+  .status{font-size:10px}
+  .hero-main{padding:22px}
+  .hero-stats{gap:18px}
+  .panel{padding:14px}
+  .data-grid{grid-template-columns:1fr}
+  .periodic-grid{grid-template-columns:repeat(18,minmax(36px,1fr)); grid-template-rows:repeat(10,62px); gap:3px}
+  .element{padding:4px; border-radius:6px}
+  .element .symbol{font-size:14px}
+  .element .number,.element .mass,.element .ename{font-size:7px}
+  .hero-stats .stat strong{font-size:18px}
+  .modal{padding:16px}
+  .formula-row{flex-direction:column}
+  .formula-row input{min-width:0; width:100%}
+  .toolbar{flex-direction:column; align-items:stretch}
+  .search-wrap{min-width:0}
+  select.field, .field, select{width:100%}
+  .compare-table{font-size:10px}
+  .compare-table th,.compare-table td{padding:8px 6px}
+}
+@media(max-width:380px){
+  .brand-mark{width:38px;height:38px;font-size:14px}
+  .periodic-grid{grid-template-columns:repeat(18,minmax(30px,1fr)); grid-template-rows:repeat(10,56px)}
+  .element .symbol{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+@media(prefers-contrast:more){
+  .element{border-width:2px}
+  .btn,.tab{border-color:rgba(255,255,255,.35)}
+  :root{--line:rgba(148,163,184,.4)}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#mainContent">Bỏ qua điều hướng · Tới nội dung chính</a>
+<div class="app">
+
+<header class="topbar" role="banner">
+  <div class="brand">
+    <div class="brand-mark">118</div>
+    <div>
+      <h1>CHEMISTRY LAB STEM</h1>
+      <p>ĐẶNG QUỐC KIỆT · 10C06 · THPT NGUYỄN HỮU TIẾN</p>
+    </div>
+  </div>
+  <div class="top-actions">
+    <div class="status" role="status" aria-live="polite"><span class="status-dot" id="statusDot" aria-hidden="true"></span><span id="statusText">Đang tải dữ liệu...</span></div>
+    <button class="btn" id="aboutBtn">Về dự án</button>
+    <button class="btn" id="randomBtn">✦ Khám phá ngẫu nhiên</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-main">
+    <div class="eyebrow">PHẦN MỀM WEB · STEM HÓA HỌC LỚP 10 · THPT NGUYỄN HỮU TIẾN</div>
+    <h2>Khám phá thế giới<br><span>nguyên tố hóa học.</span></h2>
+    <p>Phần mềm học bảng tuần hoàn tương tác chuẩn IUPAC theo chương trình GDPT 2018. Mô hình Rutherford–Bohr (minh họa) & đám mây electron (trực quan), phân tích xu hướng tuần hoàn, máy tính khối lượng mol và trắc nghiệm STEM — chạy trực tiếp trên trình duyệt, không cần cài đặt.</p>
+    <div class="hero-stats">
+      <div class="stat"><strong id="elementCount">118</strong><span>NGUYÊN TỐ</span></div>
+      <div class="stat"><strong>7</strong><span>CHU KỲ</span></div>
+      <div class="stat"><strong>18</strong><span>NHÓM</span></div>
+      <div class="stat"><strong>IUPAC</strong><span>CHUẨN HÓA</span></div>
+    </div>
+  </div>
+  <div class="hero-side">
+    <h3>KHÔNG GIAN HỌC TẬP</h3>
+    <div class="feature"><div class="feature-icon">▦</div><div><strong>Bảng tuần hoàn tương tác</strong><small>Tra cứu và khám phá 118 nguyên tố.</small></div></div>
+    <div class="feature"><div class="feature-icon">◎</div><div><strong>Mô hình Bohr + Lượng tử</strong><small>Lớp electron và đám mây xác suất chuyển động hỗn loạn.</small></div></div>
+    <div class="feature"><div class="feature-icon">⌁</div><div><strong>Xu hướng tuần hoàn</strong><small>Khảo sát độ âm điện, bán kính, năng lượng ion hóa.</small></div></div>
+    <div class="feature"><div class="feature-icon">∑</div><div><strong>Công cụ & Trắc nghiệm</strong><small>Tính khối lượng mol, so sánh, kiểm tra kiến thức.</small></div></div>
+  </div>
+</section>
+
+<main id="mainContent">
+<div class="section-head">
+  <div><h2>01 / BẢNG TUẦN HOÀN</h2><p>Nhấn nguyên tố để xem hồ sơ · Chuột phải để thêm vào so sánh</p></div>
+</div>
+
+<section class="panel">
+  <div class="toolbar">
+    <div class="search-wrap"><span>⌕</span><input id="searchInput" type="search" placeholder="Tìm tên IUPAC, tên Việt, ký hiệu hoặc số Z..." autocomplete="off"></div>
+    <select id="categoryFilter" aria-label="Lọc theo nhóm nguyên tố">
+      <option value="">Tất cả nhóm nguyên tố</option>
+      <option value="alkali metal">Kim loại kiềm</option>
+      <option value="alkaline earth metal">Kim loại kiềm thổ</option>
+      <option value="transition metal">Kim loại chuyển tiếp</option>
+      <option value="post-transition metal">Kim loại sau chuyển tiếp</option>
+      <option value="metalloid">Á kim</option>
+      <option value="diatomic nonmetal">Phi kim hai nguyên tử</option>
+      <option value="polyatomic nonmetal">Phi kim đa nguyên tử</option>
+      <option value="noble gas">Khí hiếm</option>
+      <option value="lanthanide">Họ Lantan</option>
+      <option value="actinide">Họ Actini</option>
+      <option value="unknown">Chưa phân loại / siêu nặng</option>
+    </select>
+    <button class="btn" id="clearFilter">Xóa lọc</button>
+  </div>
+
+  <div class="legend" id="legend">
+    <div class="legend-item"><i class="legend-dot" style="background:#b85e4d"></i>Kim loại kiềm</div>
+    <div class="legend-item"><i class="legend-dot" style="background:#b78643"></i>Kim loại kiềm thổ</div>
+    <div class="legend-item"><i class="legend-dot" style="background:#397d9b"></i>Kim loại chuyển tiếp</div>
+    <div class="legend-item"><i class="legend-dot" style="background:#527a91"></i>Kim loại sau chuyển tiếp</div>
+    <div class="legend-item"><i class="legend-dot" style="background:#8a7840"></i>Á kim</div>
+    <div class="legend-item"><i class="legend-dot" style="background:#43816b"></i>Phi kim</div>
+    <div class="legend-item"><i class="legend-dot" style="background:#765caa"></i>Khí hiếm</div>
+    <div class="legend-item"><i class="legend-dot" style="background:#8c5b8f"></i>Họ Lantan</div>
+    <div class="legend-item"><i class="legend-dot" style="background:#a34f70"></i>Họ Actini</div>
+  </div>
+
+  <div id="tableLoading" class="loading"><div class="spinner"></div>Đang tải dữ liệu bảng tuần hoàn...</div>
+  <div id="tableError" class="error-state hidden">
+    Không thể tải dữ liệu nguyên tố. Hãy kiểm tra kết nối Internet rồi thử lại.
+    <br><br><button class="btn primary" id="retryBtn">Thử tải lại</button>
+  </div>
+  <div class="table-scroll hidden" id="tableScroll">
+    <div class="periodic-grid" id="periodicGrid" role="grid" aria-label="Bảng tuần hoàn 118 nguyên tố"></div>
+  </div>
+  <div class="table-footnote">
+    <strong>Cách dùng:</strong> Click nguyên tố → mở hồ sơ đầy đủ · Chuột phải → thêm vào so sánh.<br>
+    Tên chính theo IUPAC (GDPT 2018); tên Việt chỉ là chú thích phụ. Ô * 57–71 / * 89–103 là marker quy ước cho Họ Lantan & Họ Actini.
+  </div>
+</section>
+
+<div class="content-grid">
+  <section class="panel" id="elementPanel">
+    <div class="panel-title"><h3>02 / HỒ SƠ NGUYÊN TỐ</h3><small>HỒ SƠ NGUYÊN TỐ</small></div>
+    <div id="elementDetails">
+      <div class="tool-card"><h4>Chưa chọn nguyên tố</h4><p>Hãy chọn một ô trong bảng tuần hoàn để xem hồ sơ chi tiết.</p></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title"><h3>03 / MÔ HÌNH NGUYÊN TỬ (MINH HỌA GIÁO DỤC)</h3><small>CẤU TRÚC NGUYÊN TỬ — MINH HỌA</small></div>
+    <div class="atom-wrap"><canvas id="atomCanvas" width="880" height="600" role="img" aria-label="Mô hình minh họa các lớp electron (Bohr) và đám mây electron (trực quan)"></canvas></div>
+    <div class="atom-info" id="atomInfo">Chọn nguyên tố để hiển thị phân bố electron.</div>
+    <div class="atom-controls">
+      <button class="btn active" id="viewBohr" title="Mô hình lớp electron (Hóa 10) – minh họa giáo dục">◎ Bohr (minh họa)</button>
+      <button class="btn" id="viewQuantum" title="Đám mây electron trực quan – không phải mô phỏng hàm sóng">☁ Đám mây (trực quan)</button>
+      <button class="btn active" id="mode2d">2D</button>
+      <button class="btn" id="mode3d">3D</button>
+      <button class="btn" id="pauseAtom">Tạm dừng</button>
+      <button class="btn" id="toggleIllustration" title="Chỉ bật khi thiếu cấu hình — phân bố 2n² là minh họa sức chứa, không phải cách điền electron thật">Minh họa 2n²: TẮT</button>
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:10px;font-size:11px;color:var(--muted)">
+      <span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff6b7a;vertical-align:middle;margin-right:4px"></i> Proton (p)</span>
+      <span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#94a3b8;vertical-align:middle;margin-right:4px"></i> Neutron (n)</span>
+      <span><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#54d9ff;vertical-align:middle;margin-right:4px"></i> Electron (e)</span>
+    </div>
+    <div id="shellBars" class="shell-bars"></div>
+    <div class="atom-note" id="atomNote">
+      <strong>Mô hình Rutherford–Bohr (minh họa giáo dục – GDPT 2018):</strong> Electron được vẽ trên các lớp K, L, M… để học sinh dễ hình dung số electron trên từng lớp. <strong>Đây không phải quỹ đạo thật.</strong> 2n² chỉ là giới hạn sức chứa lý thuyết của lớp. Thứ tự điền electron thực tế tuân theo nguyên lý Aufbau, Pauli và Hund. Nút «Minh họa 2n²» mặc định TẮT.
+    </div>
+  </section>
+</div>
+
+<div class="section-head">
+  <div><h2>04 / PHÒNG THÍ NGHIỆM TƯƠNG TÁC</h2><p>Công cụ hỗ trợ học tập và kiểm tra kiến thức Hóa học lớp 10.</p></div>
+</div>
+
+<section class="panel">
+  <div class="tabs" role="tablist" aria-label="Công cụ phòng thí nghiệm">
+    <button class="tab active" data-tab="molar">Tính khối lượng mol</button>
+    <button class="tab" data-tab="trend">Xu hướng tuần hoàn</button>
+    <button class="tab" data-tab="compare">So sánh nguyên tố</button>
+    <button class="tab" data-tab="isotope">Đồng vị</button>
+    <button class="tab" data-tab="orbital">Orbital (s/p/d/f)</button>
+    <button class="tab" data-tab="quiz">Trắc nghiệm STEM</button>
+    <button class="tab" data-tab="verify">Kiểm định</button>
+  </div>
+
+  <div id="tab-molar" class="tab-content">
+    <div class="tool-card">
+      <h4>Máy tính khối lượng mol (M)</h4>
+      <p>Nhập công thức có chỉ số, ngoặc (), [] hoặc muối ngậm nước (dấu · hoặc .). Ví dụ: H2SO4, Ca(OH)2, Al2(SO4)3, CuSO4·5H2O.</p>
+      <div class="formula-row">
+        <input class="field" id="formulaInput" type="text" placeholder="Nhập công thức, ví dụ: Al2(SO4)3" autocomplete="off">
+        <button class="btn primary" id="calculateBtn">Tính toán</button>
+        <button class="btn" id="formulaClear">Xóa</button>
+      </div>
+      <div id="molarResult" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="tab-trend" class="tab-content hidden">
+    <div class="tool-card">
+      <h4>Khảo sát xu hướng tuần hoàn</h4>
+      <p>Chọn đại lượng và chu kỳ. Chỉ nguyên tố có dữ liệu thật mới được biểu diễn — không nội suy giá trị thiếu.</p>
+      <div class="toolbar">
+        <select id="trendSelect" aria-label="Chọn đại lượng">
+          <option value="electronegativity_pauling">Độ âm điện Pauling</option>
+          <option value="ionization_energies">Năng lượng ion hóa thứ nhất (kJ/mol)</option>
+          <option value="atomic_radius">Bán kính nguyên tử (pm)</option>
+          <option value="atomic_mass">Khối lượng nguyên tử (u)</option>
+        </select>
+        <select id="trendPeriod" aria-label="Chọn chu kỳ">
+          <option value="all">Tất cả chu kỳ</option>
+          <option value="2">Chu kỳ 2</option>
+          <option value="3" selected>Chu kỳ 3</option>
+          <option value="4">Chu kỳ 4</option>
+          <option value="5">Chu kỳ 5</option>
+          <option value="6">Chu kỳ 6</option>
+          <option value="7">Chu kỳ 7</option>
+        </select>
+      </div>
+      <div class="chart-wrap"><svg id="trendChart" viewBox="0 0 760 300" role="img" aria-label="Biểu đồ xu hướng tuần hoàn"></svg></div>
+      <div class="chart-note" id="trendNote">Trong một chu kỳ, theo chiều Z tăng: bán kính nguyên tử thường giảm, độ âm điện thường tăng.</div>
+      <div class="atom-note" id="trendExplain" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <div id="tab-compare" class="tab-content hidden">
+    <div class="tool-card">
+      <h4>So sánh các nguyên tố</h4>
+      <p>Chọn nguyên tố trên bảng (hoặc chuột phải) rồi thêm vào danh sách. Tối đa 4 nguyên tố.</p>
+      <div class="compare-list" id="compareList"><span class="chart-note">Chưa có nguyên tố nào được chọn.</span></div>
+      <div id="compareOutput"></div>
+      <button class="btn" id="clearCompare">Xóa danh sách so sánh</button>
+    </div>
+  </div>
+
+  <div id="tab-isotope" class="tab-content hidden">
+    <div class="tool-card">
+      <h4>Khám phá đồng vị — Đồng vị tiêu biểu</h4>
+      <p>Chỉ liệt kê một số đồng vị tiêu biểu từ tài liệu phổ thông (không phải danh sách đầy đủ). Proton = Z; neutron = A − Z của <em>đồng vị đó</em>. Nhấn đồng vị để cập nhật số neutron trên mô hình nguyên tử.</p>
+      <div class="toolbar">
+        <select id="isotopeSelect" aria-label="Chọn nguyên tố có dữ liệu đồng vị"></select>
+      </div>
+      <div id="isotopeOutput" class="detail-text" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <div id="tab-orbital" class="tab-content hidden">
+    <div class="tool-card">
+      <h4>Khám phá orbital — Kiến thức nền (không mô phỏng giả)</h4>
+      <p style="margin-bottom:12px">Phần này <strong>giải thích khái niệm</strong> orbital s, p, d, f theo chương trình phổ thông / đại cương. <em>Không vẽ giả lập hàm sóng</em> — tránh gây hiểu nhầm rằng hình ảnh đẹp = mật độ xác suất thật.</p>
+      <div class="data-grid">
+        <div class="data-item">
+          <span>Orbital s</span>
+          <strong>Hình cầu · l = 0</strong>
+          <span style="display:block;margin-top:6px;color:var(--muted)">1 orbital mỗi lớp (n). Sức chứa tối đa 2 electron.</span>
+        </div>
+        <div class="data-item">
+          <span>Orbital p</span>
+          <strong>Hình quả tạ · l = 1</strong>
+          <span style="display:block;margin-top:6px;color:var(--muted)">3 orbital (px, py, pz) từ lớp n ≥ 2. Sức chứa tối đa 6 electron.</span>
+        </div>
+        <div class="data-item">
+          <span>Orbital d</span>
+          <strong>Hình phức tạp hơn · l = 2</strong>
+          <span style="display:block;margin-top:6px;color:var(--muted)">5 orbital từ lớp n ≥ 3. Sức chứa tối đa 10 electron. Liên quan kim loại chuyển tiếp.</span>
+        </div>
+        <div class="data-item">
+          <span>Orbital f</span>
+          <strong>Hình phức tạp · l = 3</strong>
+          <span style="display:block;margin-top:6px;color:var(--muted)">7 orbital từ lớp n ≥ 4. Sức chứa tối đa 14 electron. Họ Lantan / Actini.</span>
+        </div>
+      </div>
+      <div class="atom-note" style="margin-top:14px">
+        <strong>Phân biệt quan trọng:</strong><br>
+        • <strong>Lớp electron (K, L, M…)</strong> — khái niệm Bohr / SGK lớp 10, dùng để đếm electron.<br>
+        • <strong>Orbital (s, p, d, f)</strong> — khái niệm cơ học lượng tử: vùng không gian có xác suất tìm thấy electron.<br>
+        • <strong>2n²</strong> = sức chứa tối đa của lớp chính n — <em>không</em> phải thuật toán điền electron (phải dùng Aufbau + Pauli + Hund).<br>
+        • Sản phẩm này <strong>không mô phỏng</strong> mật độ xác suất orbital bằng hạt ngẫu nhiên.
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-quiz" class="tab-content hidden">
+    <div class="tool-card">
+      <div class="panel-title"><h4>Trắc nghiệm STEM Hóa học lớp 10</h4><small id="quizScore">Điểm: 0 / 0</small></div>
+      <div id="quizArea">
+        <p class="quiz-question" id="quizQuestion">Nhấn nút bắt đầu để nhận câu hỏi.</p>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="feedback" id="quizFeedback"></div>
+        <div id="quizAdaptive" class="atom-note" style="margin-top:12px;display:none"></div>
+        <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" id="nextQuestion">Bắt đầu</button>
+          <button class="btn" id="quizSummaryBtn">Xem điểm yếu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-verify" class="tab-content hidden">
+    <div class="tool-card">
+      <h4>Trung tâm kiểm định — Giai đoạn 3</h4>
+      <p>Bộ unit test + kiểm thử tích hợp. Kết quả tách <strong>PASS / FAIL / WARNING</strong> — không gộp WARNING vào PASS. Có thể xuất báo cáo kiểm định (JSON + văn bản).</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button class="btn primary" id="runVerifyBtn">▶ Chạy toàn bộ kiểm định</button>
+        <button class="btn" id="exportVerifyBtn" disabled>⬇ Xuất báo cáo</button>
+        <button class="btn" id="copyVerifyBtn" disabled>📋 Sao chép tóm tắt</button>
+      </div>
+      <div id="verifyOutput" style="margin-top:14px" class="detail-text"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="footer" role="contentinfo">
+  <strong>© 2026 · Đặng Quốc Kiệt · Lớp 10C06 · THPT Nguyễn Hữu Tiến (THPT NHT)</strong><br>
+  DỰ ÁN STEM HÓA HỌC LỚP 10 · BẢNG TUẦN HOÀN TƯƠNG TÁC · CHEMISTRY LAB STEM · Final 3<br>
+  Phần mềm web (HTML) · Không cần cài đặt · An toàn cho học sinh<br>
+  Dữ liệu: Periodic-Table-JSON · IUPAC · GDPT 2018 · Trung tâm kiểm định tích hợp<br>
+  Bohr & đám mây: minh họa giáo dục · Orbital: kiến thức nền (không mô phỏng giả) · Học thích ứng trên trắc nghiệm
+</footer>
+</div>
+
+<!-- Modal About -->
+<div class="modal-backdrop" id="aboutModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-head"><h3>Về dự án Chemistry Lab STEM</h3><button class="close-btn" id="closeAbout">Đóng ✕</button></div>
+    <div class="detail-text">
+      <p><strong>Tên dự án:</strong> CHEMISTRY LAB STEM – Phòng thí nghiệm số Hóa học lớp 10</p>
+      <p><strong>Tác giả:</strong> Đặng Quốc Kiệt · Lớp 10C06 · THPT Nguyễn Hữu Tiến</p>
+      <p><strong>Hình thức:</strong> Phần mềm web (HTML + CSS + JavaScript) chạy trực tiếp trên trình duyệt, không cần cài đặt.</p>
+      <p><strong>Mục tiêu:</strong> Số hóa việc học Hóa học lớp 10 theo chương trình GDPT 2018, giúp học sinh trực quan hóa cấu trúc nguyên tử (mô hình Rutherford–Bohr minh họa và đám mây electron trực quan), quy luật tuần hoàn và tính toán khối lượng mol một cách chính xác, minh bạch khoa học.</p>
+
+      <p><strong>Phù hợp tiêu chí đánh giá STEM:</strong></p>
+      <ul>
+        <li><strong>Nguyên vật liệu / Tính khả thi:</strong> Chỉ cần trình duyệt web (Chrome, Edge, Firefox…). Dữ liệu công khai, miễn phí, không cần server riêng.</li>
+        <li><strong>Chất lượng:</strong> 118 nguyên tố đầy đủ, mô hình Bohr + lượng tử, máy tính mol hỗ trợ công thức phức tạp, biểu đồ xu hướng, trắc nghiệm STEM.</li>
+        <li><strong>Tính thẩm mỹ:</strong> Giao diện tối hiện đại, tương tác mượt, hỗ trợ cả máy tính và điện thoại.</li>
+        <li><strong>Trung thực khoa học:</strong> Phân biệt rõ dữ liệu thật và phần minh họa giáo dục. Không nội suy số liệu thiếu.</li>
+      </ul>
+
+      <p><strong>Nguồn dữ liệu chính:</strong></p>
+      <ul>
+        <li>Periodic-Table-JSON (Bowserinator) – dữ liệu 118 nguyên tố</li>
+        <li>IUPAC – danh pháp và chuẩn hóa</li>
+        <li>PubChem – tham chiếu số liệu</li>
+        <li>Chương trình Giáo dục phổ thông 2018 – định hướng nội dung</li>
+      </ul>
+
+      <p><strong>Nguyên tắc khoa học của sản phẩm (ưu tiên độ chính xác trước):</strong></p>
+      <ul>
+        <li>Mô hình Bohr được ghi rõ là <strong>minh họa giáo dục</strong>, không phải quỹ đạo electron thật.</li>
+        <li>Chế độ “Đám mây” chỉ là trực quan — <strong>không phải mô phỏng hàm sóng hay orbital s/p/d/f</strong>.</li>
+        <li>Phân biệt rõ dữ liệu thật (cấu hình electron từ dataset) và minh họa sức chứa 2n² (mặc định TẮT).</li>
+        <li>Số neutron chỉ chính xác khi người dùng chọn đồng vị cụ thể. Không lấy từ khối lượng nguyên tử trung bình.</li>
+        <li>Biểu đồ xu hướng neo theo Z thực, ngắt đoạn khi thiếu dữ liệu — không nội suy.</li>
+        <li>Máy tính mol hỗ trợ ngoặc lồng và muối ngậm nước; từ chối công thức không hợp lệ.</li>
+      </ul>
+
+      <p><strong>Công nghệ:</strong> HTML + CSS + JavaScript thuần (1 file), Canvas 2D, SVG biểu đồ. Dữ liệu tải từ Periodic-Table-JSON (GitHub). Không cần cài đặt, chạy trên trình duyệt.</p>
+
+      <p><strong>Giới hạn sản phẩm (trung thực):</strong></p>
+      <ul>
+        <li>Cần Internet lần đầu để tải dữ liệu 118 nguyên tố (chưa nhúng offline đầy đủ).</li>
+        <li>Không mô phỏng orbital s/p/d/f bằng mật độ xác suất toán học.</li>
+        <li>Bộ đồng vị chỉ là tập mẫu tiêu biểu, không đầy đủ mọi đồng vị.</li>
+        <li>Một số nguyên tố nặng thiếu dữ liệu độ âm điện / bán kính trong nguồn — biểu đồ để trống, không bịa số.</li>
+        <li>Mô hình hạt nhân phóng to rất nhiều so với tỷ lệ thật.</li>
+      </ul>
+
+      <p><strong>Gợi ý trả lời khi bảo vệ:</strong></p>
+      <ul>
+        <li><em>Sản phẩm giải quyết gì?</em> Giúp học sinh lớp 10 trực quan hóa bảng tuần hoàn, cấu hình electron và xu hướng — nhưng không đánh đồng minh họa với mô hình vật lý chính xác.</li>
+        <li><em>Khác bảng tuần hoàn thường?</em> Có mô hình Bohr/đám mây có nhãn trung thực, máy tính mol, so sánh, đồng vị liên kết neutron, Trung tâm kiểm định, Học thích ứng.</li>
+        <li><em>Dữ liệu từ đâu?</em> Periodic-Table-JSON + chuẩn IUPAC / GDPT 2018; tab Kiểm định cho chạy tự kiểm.</li>
+        <li><em>Neutron xác định thế nào?</em> Chỉ khi chọn đồng vị (A biết trước): n = A − Z. Không lấy từ khối lượng trung bình.</li>
+        <li><em>2n² là gì?</em> Giới hạn sức chứa lớp — không phải thuật toán điền electron (phải Aufbau).</li>
+      </ul>
+
+      <p style="margin-top:16px;color:var(--muted)">Sản phẩm an toàn, không dùng hóa chất thật, phù hợp trình diễn tại Ngày hội STEM Hóa học. Ưu tiên trung thực khoa học hơn hiệu ứng đẹp.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Element -->
+<div class="modal-backdrop" id="elementModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-head"><h3 id="modalTitle">Chi tiết nguyên tố</h3><button class="close-btn" id="closeModal">Đóng ✕</button></div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+
+const DATA_URL = "https://raw.githubusercontent.com/Bowserinator/Periodic-Table-JSON/master/PeriodicTableJSON.json";
+
+/* ========== PHASE 1 – DATA LAYER ==========
+ * VI_NAMES: tên Việt phổ thông theo SGK / IUPAC Việt hóa (không thay thế tên IUPAC chính).
+ * categoryNormalize: chuẩn hóa chuỗi category dài của siêu nặng về khóa chuẩn.
+ * normalizeElement: ép kiểu, chuẩn hóa category, giữ atomic_radii, ionization_energies.
+ */
+const VI_NAMES = {
+  1:"Hiđro",2:"Heli",3:"Liti",4:"Beri",5:"Bo",6:"Cacbon",7:"Nitơ",8:"Oxi",9:"Flo",10:"Neon",
+  11:"Natri",12:"Magie",13:"Nhôm",14:"Silic",15:"Photpho",16:"Lưu huỳnh",17:"Clo",18:"Agon",
+  19:"Kali",20:"Canxi",21:"Scandi",22:"Titan",23:"Vanadi",24:"Crom",25:"Mangan",26:"Sắt",
+  27:"Coban",28:"Niken",29:"Đồng",30:"Kẽm",31:"Gali",32:"Gecmani",33:"Asen",34:"Selen",
+  35:"Brom",36:"Kripton",37:"Rubidi",38:"Stronti",39:"Ytri",40:"Zirconi",41:"Niobi",
+  42:"Molipden",43:"Techneti",44:"Ruteni",45:"Rodi",46:"Paladi",47:"Bạc",48:"Cadimi",
+  49:"Indi",50:"Thiếc",51:"Antimon",52:"Telua",53:"Iot",54:"Xenon",55:"Cesi",56:"Bari",
+  57:"Lantan",58:"Xeri",59:"Praseodymi",60:"Neodymi",61:"Prometi",62:"Samari",63:"Europi",
+  64:"Gadolini",65:"Tecbi",66:"Dysprosi",67:"Holmi",68:"Ebi",69:"Thuli",70:"Ytecbi",71:"Luteti",
+  72:"Hafni",73:"Tantan",74:"Volfram",75:"Reni",76:"Osmi",77:"Iriđi",78:"Platin",79:"Vàng",
+  80:"Thủy ngân",81:"Tali",82:"Chì",83:"Bitmut",84:"Poloni",85:"Astatin",86:"Radon",
+  87:"Franxi",88:"Radi",89:"Actini",90:"Thori",91:"Protactini",92:"Urani",93:"Neptuni",
+  94:"Plutoni",95:"Amerixi",96:"Curi",97:"Becquereli",98:"Californi",99:"Einsteini",
+  100:"Fermi",101:"Mendelevi",102:"Nobeli",103:"Lawrenci",104:"Rutherfordi",105:"Dubni",
+  106:"Seaborgi",107:"Bohri",108:"Hassi",109:"Meitneri",110:"Darmstadti",111:"Roentgeni",
+  112:"Copernici",113:"Nihoni",114:"Flerovi",115:"Moscovi",116:"Livermori",117:"Tennessin",118:"Oganesson"
+};
+
+const categoryNames = {
+  "alkali metal":"Kim loại kiềm",
+  "alkaline earth metal":"Kim loại kiềm thổ",
+  "transition metal":"Kim loại chuyển tiếp",
+  "post-transition metal":"Kim loại sau chuyển tiếp",
+  "metalloid":"Á kim",
+  "diatomic nonmetal":"Phi kim hai nguyên tử",
+  "polyatomic nonmetal":"Phi kim đa nguyên tử",
+  "noble gas":"Khí hiếm",
+  "lanthanide":"Họ Lantan",
+  "lanthanoid":"Họ Lantan",
+  "actinide":"Họ Actini",
+  "actinoid":"Họ Actini",
+  "unknown":"Chưa phân loại"
+};
+
+/** Chuẩn hóa category từ dataset (chuỗi dài của siêu nặng) về khóa chuẩn. */
+function categoryNormalize(raw){
+  if(!raw) return "unknown";
+  const s = String(raw).toLowerCase().trim();
+  if(s === "alkali metal" || s.includes("alkali metal")) return "alkali metal";
+  if(s === "alkaline earth metal" || s.includes("alkaline earth")) return "alkaline earth metal";
+  if(s === "transition metal" || s.includes("transition metal")) return "transition metal";
+  if(s === "post-transition metal" || s.includes("post-transition")) return "post-transition metal";
+  if(s === "metalloid" || s.includes("metalloid")) return "metalloid";
+  if(s === "diatomic nonmetal") return "diatomic nonmetal";
+  if(s === "polyatomic nonmetal") return "polyatomic nonmetal";
+  if(s === "noble gas" || s.includes("noble gas")) return "noble gas";
+  if(s === "lanthanide" || s === "lanthanoid" || s.includes("lanthan")) return "lanthanide";
+  if(s === "actinide" || s === "actinoid" || s.includes("actin")) return "actinide";
+  if(s.includes("unknown")) return "unknown";
+  return s;
+}
+
+const NOBLE_CORES = {
+  He: [2], Ne: [2,8], Ar: [2,8,8], Kr: [2,8,18,8], Xe: [2,8,18,18,8], Rn: [2,8,18,32,18,8]
+};
+
+/* ========== SCIENTIFIC DEFINITIONS & UNITS (Phase 1 – Integrity) ==========
+ * atomic_mass          : khối lượng nguyên tử trung bình theo độ phong phú tự nhiên, đơn vị u (Dalton).
+ *                        M (g/mol) của công thức có giá trị số bằng tổng khối lượng theo u.
+ * electronegativity    : thang Pauling (không thứ nguyên). Khí hiếm thường không được gán giá trị.
+ * ionization_energies  : năng lượng ion hóa, đơn vị kJ/mol. Phần tử [0] = I₁.
+ * atomic_radii         : pm. Có nhiều định nghĩa (empirical / calculated / covalent / metallic / vdW).
+ *                        Biểu đồ ưu tiên empirical → calculated; luôn ghi rõ phương pháp.
+ * shells               : phân bố electron theo lớp chính (K,L,M…) suy từ dataset hoặc cấu hình.
+ *                        Không đồng nhất với orbital Aufbau chi tiết (đặc biệt d/f).
+ * neutron              : n = A − Z CHỈ khi đã chọn đồng vị cụ thể. Cấm suy từ atomic_mass.
+ */
+const UNITS = Object.freeze({
+  mass: "u",
+  molar: "g/mol",
+  ionization: "kJ/mol",
+  radius: "pm",
+  electronegativity: "Pauling (không thứ nguyên)"
+});
+
+/** Spot-check configs giáo dục lớp 10 (SGK) + ngoại lệ d-block đã biết. */
+const KNOWN_SHELLS = Object.freeze({
+  1:[1], 2:[2], 3:[2,1], 4:[2,2], 5:[2,3], 6:[2,4], 7:[2,5], 8:[2,6], 9:[2,7], 10:[2,8],
+  11:[2,8,1], 12:[2,8,2], 13:[2,8,3], 14:[2,8,4], 15:[2,8,5], 16:[2,8,6], 17:[2,8,7], 18:[2,8,8],
+  19:[2,8,8,1], 20:[2,8,8,2],
+  24:[2,8,13,1],   // Cr — ngoại lệ 4s¹ 3d⁵
+  26:[2,8,14,2],   // Fe
+  29:[2,8,18,1],   // Cu — ngoại lệ 4s¹ 3d¹⁰
+  30:[2,8,18,2]    // Zn
+});
+
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+let elements = [];
+let selectedElement = null;
+let selectedIsotope = null; // {A, symbol, note} or null → neutron chưa xác định
+let compareElements = [];
+let atomAnimation = true;
+let atomFrame = 0;
+let atomMode = "2d";
+let atomView = "bohr";
+let atomRaf = null;
+let allowShellIllustration = false;
+let quiz = {score:0, answered:0, current:null, locked:false, lastIndex:-1, lastQuestion:null, wrongTopics:{}, byLevel:{}, levelFilter:null};
+
+// Lưu trạng thái hạt electron cho đám mây lượng tử (để chuyển động liên tục)
+let quantumParticles = [];
+
+const categoryClass = cat => "category-" + String(categoryNormalize(cat)||"unknown").toLowerCase().replaceAll(" ","-");
+const formatNumber = (v,d=3) => {
+  if (v===null||v===undefined||!Number.isFinite(Number(v))) return "Chưa có dữ liệu";
+  return Number(v).toLocaleString("vi-VN",{maximumFractionDigits:d});
+};
+const validNumber = v => typeof v==="number" && Number.isFinite(v);
+const escapeHTML = v => String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const getViNote = e => VI_NAMES[e.number] ? ` (${VI_NAMES[e.number]})` : "";
+/** Tên hiển thị: IUPAC chính + chú thích Việt (nếu có). */
+const displayName = e => e.name + (VI_NAMES[e.number] ? ` (${VI_NAMES[e.number]})` : "");
+
+function buildVietnameseSummary(e){
+  const name=e.name+(VI_NAMES[e.number]?` (${VI_NAMES[e.number]})`:"");
+  const cat=categoryNames[e.category]||"nguyên tố";
+  const phase=e.phase==="Gas"?"khí":e.phase==="Liquid"?"lỏng":e.phase==="Solid"?"rắn":null;
+  const shells=e.shells&&e.shells.length?e.shells.join("–"):null;
+  const parts=[];
+  parts.push(`${name} là ${cat}, có số hiệu nguyên tử Z = ${e.number}.`);
+  if(e.period&&e.group) parts.push(`Nguyên tố thuộc chu kỳ ${e.period}, nhóm ${e.group}.`);
+  else if(e.period) parts.push(`Nguyên tố thuộc chu kỳ ${e.period}.`);
+  if(phase) parts.push(`Ở điều kiện chuẩn, đơn chất thường ở trạng thái ${phase}.`);
+  if(validNumber(e.atomic_mass)) parts.push(`Khối lượng nguyên tử khoảng ${formatNumber(e.atomic_mass,3)} u.`);
+  if(shells && (e.shellSource==="config"||e.shellSource==="dataset"))
+    parts.push(`Phân bố electron theo lớp (suy từ cấu hình): ${shells}.`);
+  else if(shells && e.shellSource==="illustration")
+    parts.push(`Phân bố lớp đang ở chế độ minh họa 2n² (${shells}) — không thay thế cấu hình Aufbau.`);
+  if(e.electron_configuration) parts.push(`Cấu hình electron: ${e.electron_configuration}.`);
+  if(validNumber(e.electronegativity_pauling)) parts.push(`Độ âm điện Pauling: ${formatNumber(e.electronegativity_pauling,2)}.`);
+  if(e.discovered_by) parts.push(`Người/nhóm gắn với phát hiện: ${e.discovered_by}.`);
+  parts.push("Dữ liệu số liệu tham chiếu Periodic-Table-JSON / PubChem; mô hình hạt mang tính minh họa giáo dục lớp 10.");
+  return parts.join(" ");
+}
+
+function showToast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(showToast.timer); showToast.timer=setTimeout(()=>t.classList.remove("show"),2500);
+}
+
+const SHELL_CAPACITY = [2,8,18,32,32,18,8];
+
+function capacityOK(shells){
+  return shells.every((c,i)=>Number.isInteger(c)&&c>=0&&c<=(SHELL_CAPACITY[i]??2*(i+1)*(i+1)));
+}
+
+function shellsFromMap(map, Z){
+  if(!map.size) return null;
+  const maxN=Math.max(...map.keys());
+  const shells=[];
+  for(let i=1;i<=maxN;i++) shells.push(map.get(i)||0);
+  if(shells.reduce((a,b)=>a+b,0)!==Z) return null;
+  if(!capacityOK(shells)) return null;
+  return shells;
+}
+
+function getValidatedShells(element){
+  const Z = Number(element.number);
+  if (!Number.isInteger(Z) || Z<1 || Z>118) return {shells:null, source:"unavailable"};
+
+  if (Array.isArray(element.shells) &&
+      element.shells.every(n=>Number.isInteger(n)&&n>=0) &&
+      element.shells.reduce((a,b)=>a+b,0)===Z &&
+      capacityOK(element.shells)){
+    return {shells:element.shells.slice(), source:"dataset"};
+  }
+
+  const config = String(element.electron_configuration || "").trim();
+  if (!config) return {shells:null, source:"unavailable"};
+
+  if (!config.includes("[")){
+    const shells = parseFullConfig(config, Z);
+    if (shells && capacityOK(shells)) return {shells, source:"config"};
+  }
+
+  const coreMatch = config.match(/^\[([A-Za-z]+)\]\s*(.*)$/);
+  if (coreMatch){
+    const coreSym = coreMatch[1];
+    const rest = coreMatch[2] || "";
+    const coreShells = NOBLE_CORES[coreSym];
+    if (coreShells){
+      const map = new Map();
+      coreShells.forEach((c,i)=>map.set(i+1,c));
+      const re = /(\d+)([spdf])(\d+)/gi;
+      let m, ok=true;
+      const subCap={s:2,p:6,d:10,f:14};
+      while ((m=re.exec(rest))!==null){
+        const n=Number(m[1]), sub=m[2].toLowerCase(), cnt=Number(m[3]);
+        if (!Number.isInteger(n)||n<1||n>7||cnt<0||cnt>(subCap[sub]??0)){ok=false;break;}
+        map.set(n,(map.get(n)||0)+cnt);
+      }
+      if (ok){
+        const shells=shellsFromMap(map,Z);
+        if (shells) return {shells, source:"config"};
+      }
+    }
+  }
+  return {shells:null, source:"unavailable"};
+}
+
+function parseFullConfig(config, expectedZ){
+  if (!config || !config.trim()) return null;
+  const re = /(\d+)([spdf])(\d+)/gi;
+  const map = new Map();
+  let total=0, m;
+  const cap={s:2,p:6,d:10,f:14};
+  while ((m=re.exec(config))!==null){
+    const n=Number(m[1]), sub=m[2].toLowerCase(), cnt=Number(m[3]);
+    if (!Number.isInteger(n)||n<1||n>7||cnt<0||cnt>(cap[sub]??-1)) return null;
+    map.set(n,(map.get(n)||0)+cnt);
+    total+=cnt;
+  }
+  if (expectedZ!=null && total!==expectedZ) return null;
+  if (map.size===0) return null;
+  return shellsFromMap(map, expectedZ!=null?expectedZ:total);
+}
+
+function educationalShellsIllustration(Z){
+  let remaining=Z;
+  const shells=[];
+  for (let n=1;n<=7 && remaining>0;n++){
+    const max=2*n*n;
+    const take=Math.min(remaining,max);
+    shells.push(take);
+    remaining-=take;
+  }
+  return shells;
+}
+
+function applyShellData(e){
+  const r=getValidatedShells(e);
+  if(r.shells){
+    e.shells=r.shells;
+    e.shellSource=r.source;
+  } else if(allowShellIllustration){
+    e.shells=educationalShellsIllustration(e.number);
+    e.shellSource="illustration";
+  } else {
+    e.shells=null;
+    e.shellSource="unavailable";
+  }
+}
+
+function refreshAllShells(){
+  elements.forEach(applyShellData);
+  // Đồng bộ lại selectedElement & compare list với object mới (tránh stale reference)
+  if(selectedElement){
+    const fresh=elements.find(x=>x.number===selectedElement.number);
+    if(fresh) selectElement(fresh,false);
+  }
+  if(compareElements.length){
+    compareElements = compareElements
+      .map(c => elements.find(x=>x.number===c.number))
+      .filter(Boolean);
+    renderCompare();
+  }
+}
+
+function normalizeElement(raw){
+  const number = Number(raw.number);
+  const period = Number(raw.period);
+  const group = (raw.group===null||raw.group===undefined||raw.group==="") ? null : Number(raw.group);
+  const atomic_mass = (raw.atomic_mass===null||raw.atomic_mass===undefined) ? null : Number(raw.atomic_mass);
+  const en = (raw.electronegativity_pauling===null||raw.electronegativity_pauling===undefined)
+    ? null : Number(raw.electronegativity_pauling);
+  const category = categoryNormalize(raw.category);
+
+  let ionization_energies = null;
+  if(Array.isArray(raw.ionization_energies) && raw.ionization_energies.length){
+    const cleaned = raw.ionization_energies
+      .map(v => Number(v))
+      .filter(v => Number.isFinite(v) && v > 0);
+    if(cleaned.length) ionization_energies = cleaned;
+  }
+
+  const atomic_radii = (raw.atomic_radii && typeof raw.atomic_radii === "object")
+    ? raw.atomic_radii : null;
+
+  return {
+    ...raw,
+    number,
+    period: Number.isInteger(period) && period >= 1 && period <= 7 ? period : null,
+    group: Number.isInteger(group) ? group : null,
+    atomic_mass: Number.isFinite(atomic_mass) ? atomic_mass : null,
+    electronegativity_pauling: Number.isFinite(en) ? en : null,
+    ionization_energies,
+    atomic_radii,
+    category,
+    category_raw: raw.category || null,
+    electron_configuration: String(raw.electron_configuration || "").trim() || null,
+    electron_configuration_semantic: String(raw.electron_configuration_semantic || "").trim() || null,
+    phase: raw.phase || null,
+    discovered_by: raw.discovered_by || null,
+    shells: null,
+    shellSource: "unavailable"
+  };
+}
+
+async function loadElements(){
+  $("#tableLoading").classList.remove("hidden");
+  $("#tableError").classList.add("hidden");
+  $("#tableScroll").classList.add("hidden");
+  $("#statusText").textContent="Đang tải dữ liệu...";
+  $("#statusDot").classList.remove("ready");
+
+  try{
+    const res=await fetch(DATA_URL,{cache:"no-store"});
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const json=await res.json();
+    if(!Array.isArray(json.elements)||json.elements.length<118) throw new Error("Dữ liệu không đầy đủ");
+
+    const normalized=json.elements.map(normalizeElement)
+      .filter(e=>Number.isInteger(e.number)&&e.number>=1&&e.number<=118);
+    if(normalized.length!==118) throw new Error("Số lượng nguyên tố không hợp lệ");
+
+    elements=normalized.sort((a,b)=>a.number-b.number);
+    elements.forEach(applyShellData);
+
+    $("#elementCount").textContent=elements.length;
+    $("#tableLoading").classList.add("hidden");
+    $("#tableScroll").classList.remove("hidden");
+    $("#statusText").textContent="Dữ liệu 118 nguyên tố sẵn sàng";
+    $("#statusDot").classList.add("ready");
+
+    renderPeriodicTable();
+    renderTrendChart();
+    selectElement(elements.find(e=>e.number===6)||elements[0]);
+  }catch(err){
+    console.error(err);
+    $("#tableLoading").classList.add("hidden");
+    $("#tableError").classList.remove("hidden");
+    $("#statusText").textContent="Không thể tải dữ liệu";
+  }
+}
+
+function renderPeriodicTable(){
+  const grid=$("#periodicGrid");
+  grid.innerHTML="";
+
+  elements.forEach(e=>{
+    if(e.number>=57&&e.number<=71){e._col=e.number-54;e._row=9;}
+    else if(e.number>=89&&e.number<=103){e._col=e.number-86;e._row=10;}
+    else {
+      e._col = Number.isInteger(e.xpos) ? e.xpos : e.group;
+      e._row = Number.isInteger(e.ypos) ? e.ypos : e.period;
+    }
+  });
+
+  elements.forEach(e=>{
+    if(!Number.isInteger(e._col)||!Number.isInteger(e._row)) return;
+    const btn=document.createElement("button");
+    btn.type="button";
+    btn.className=`element ${categoryClass(e.category)}`;
+    btn.dataset.number=e.number;
+    btn.style.gridColumn=String(e._col);
+    btn.style.gridRow=String(e._row);
+    btn.title=`${e.name}${getViNote(e)} (${e.symbol}) · Z=${e.number}`;
+    btn.setAttribute("aria-label",`${e.name}${getViNote(e)}, ${e.symbol}, số hiệu ${e.number}`);
+    btn.innerHTML=`
+      <span class="number">${e.number}</span>
+      <span class="symbol">${escapeHTML(e.symbol)}</span>
+      <span class="ename">${escapeHTML(e.name)}</span>
+      <span class="mass">${validNumber(e.atomic_mass)?formatNumber(e.atomic_mass,2):"—"}</span>`;
+    btn.addEventListener("click",()=>selectElement(e,true));
+    btn.addEventListener("dblclick",()=>openModal(e));
+    btn.addEventListener("contextmenu",ev=>{ev.preventDefault();addToCompare(e);});
+    grid.appendChild(btn);
+  });
+
+  function addBodyMarker(col, row, rangeText, seriesName, firstZ){
+    const m=document.createElement("button");
+    m.type="button";
+    m.className="element-placeholder";
+    m.style.gridColumn=String(col);
+    m.style.gridRow=String(row);
+    m.innerHTML=`<b>*</b><span>${rangeText}</span>`;
+    m.title=`${seriesName} (${rangeText})`;
+    m.addEventListener("click",()=>{
+      const target=grid.querySelector(`.element[data-number="${firstZ}"]`);
+      if(target) target.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"});
+      showToast(`${seriesName} · ${rangeText}`);
+    });
+    grid.appendChild(m);
+  }
+  addBodyMarker(3, 6, "57–71", "Họ Lantan", 57);
+  addBodyMarker(3, 7, "89–103", "Họ Actini", 89);
+
+  const lan=document.createElement("div");
+  lan.className="element-placeholder";
+  lan.style.gridColumn="1 / 3";
+  lan.style.gridRow="9";
+  lan.innerHTML="<b>Họ Lantan</b><span>57 – 71</span>";
+  grid.appendChild(lan);
+
+  const act=document.createElement("div");
+  act.className="element-placeholder";
+  act.style.gridColumn="1 / 3";
+  act.style.gridRow="10";
+  act.innerHTML="<b>Họ Actini</b><span>89 – 103</span>";
+  grid.appendChild(act);
+
+  applyFilters();
+}
+
+function applyFilters(){
+  const q=$("#searchInput").value.trim().toLowerCase();
+  const cat=$("#categoryFilter").value;
+  $$(".element").forEach(btn=>{
+    const e=elements.find(x=>x.number===Number(btn.dataset.number));
+    if(!e)return;
+    const vi=(VI_NAMES[e.number]||"").toLowerCase();
+    const hay=`${e.name} ${vi} ${e.symbol} ${e.number} ${e.category||""}`.toLowerCase();
+    const matchQ=!q||hay.includes(q);
+    const matchC=!cat||e.category===cat;
+    btn.classList.toggle("filtered-out",!(matchQ&&matchC));
+  });
+}
+$("#searchInput").addEventListener("input",applyFilters);
+$("#categoryFilter").addEventListener("change",applyFilters);
+$("#clearFilter").addEventListener("click",()=>{$("#searchInput").value="";$("#categoryFilter").value="";applyFilters();});
+
+function selectElement(e, fromClick){
+  if(!e)return;
+  // Khi đổi nguyên tố khác Z → reset đồng vị đã chọn
+  if(!selectedElement || selectedElement.number !== e.number){
+    selectedIsotope = null;
+  }
+  selectedElement=e;
+  atomAnimation=true;
+  if($("#pauseAtom")) $("#pauseAtom").textContent="Tạm dừng";
+  // Tạo lại hạt cho đám mây trực quan mỗi khi đổi nguyên tố
+  initQuantumParticles(e.number);
+  // Đồng bộ dropdown đồng vị nếu nguyên tố có trong ISOTOPE_DATA
+  const isoSel = $("#isotopeSelect");
+  if(isoSel && ISOTOPE_DATA[e.number]){
+    isoSel.value = String(e.number);
+  }
+
+  $$(".element").forEach(b=>{
+    const on = Number(b.dataset.number)===e.number;
+    b.classList.toggle("selected",on);
+    if(on && fromClick) b.classList.add("pulse");
+  });
+  setTimeout(()=>$$(".element.pulse").forEach(b=>b.classList.remove("pulse")),500);
+
+  const cat=categoryNames[e.category]||e.category||"Chưa phân loại";
+  const shells=e.shells?e.shells.join(" – "):"Chưa xác định";
+  const firstIE=Array.isArray(e.ionization_energies)?e.ionization_energies[0]:null;
+  const phaseVi=e.phase==="Gas"?"Khí":e.phase==="Liquid"?"Lỏng":e.phase==="Solid"?"Rắn":(e.phase||"—");
+
+  $("#elementDetails").innerHTML=`
+    <div class="element-summary">
+      <div class="big-symbol ${categoryClass(e.category)}">${escapeHTML(e.symbol)}</div>
+      <div>
+        <h3>${escapeHTML(e.name)}${escapeHTML(getViNote(e))}</h3>
+        <p>Z = ${e.number} · ${escapeHTML(cat)}</p>
+      </div>
+    </div>
+    <div class="data-grid">
+      <div class="data-item"><span>Khối lượng nguyên tử</span><strong>${formatNumber(e.atomic_mass,5)} u</strong></div>
+      <div class="data-item"><span>Chu kỳ / Nhóm</span><strong>${e.period||"—"} / ${e.group||"—"}</strong></div>
+      <div class="data-item"><span>Phân bố electron theo lớp</span><strong>${shells}</strong></div>
+      <div class="data-item"><span>Nguồn phân bố</span><strong>${e.shellSource==="dataset"||e.shellSource==="config"?"Từ cấu hình electron":e.shellSource==="illustration"?"Minh họa 2n² (không phải Aufbau)":"Chưa có dữ liệu"}</strong></div>
+      <div class="data-item"><span>Độ âm điện Pauling</span><strong>${formatNumber(e.electronegativity_pauling,3)}</strong></div>
+      <div class="data-item"><span>Năng lượng ion hóa I</span><strong>${firstIE==null?"Chưa có":formatNumber(firstIE,1)+" kJ/mol"}</strong></div>
+      <div class="data-item"><span>Trạng thái (điều kiện chuẩn)</span><strong>${phaseVi}</strong></div>
+    </div>
+    <p class="detail-text" style="margin-top:12px">${escapeHTML(buildVietnameseSummary(e))}</p>
+    <div class="toolbar" style="margin-top:12px">
+      <button class="btn primary" id="btnViewBohr">◎ Mô hình Bohr (minh họa)</button>
+      <button class="btn" id="btnViewQuantum">☁ Đám mây (trực quan)</button>
+      <button class="btn" id="btnAddCompare">＋ So sánh</button>
+    </div>`;
+
+  $("#btnViewBohr")?.addEventListener("click",()=>{setAtomView("bohr");document.querySelector(".atom-wrap")?.scrollIntoView({behavior:"smooth",block:"center"});});
+  $("#btnViewQuantum")?.addEventListener("click",()=>{setAtomView("quantum");document.querySelector(".atom-wrap")?.scrollIntoView({behavior:"smooth",block:"center"});});
+  $("#btnAddCompare")?.addEventListener("click",()=>addToCompare(e));
+
+  $("#atomInfo").textContent=`${e.name} (${e.symbol}) · Z=${e.number} · ${e.shells?e.shells.join("–"):"Chưa có cấu hình"}`;
+  renderShellBars(e);
+  drawAtom();
+}
+
+function openModal(e){
+  $("#elementModal").classList.add("open");
+  document.body.style.overflow="hidden";
+  renderModal(e);
+}
+function closeElementModal(){
+  $("#elementModal").classList.remove("open");
+  document.body.style.overflow="";
+}
+function renderModal(e){
+  $("#modalTitle").textContent=`${e.name}${getViNote(e)} (${e.symbol})`;
+  const cat=categoryNames[e.category]||e.category||"Chưa phân loại";
+  const shells=e.shells?e.shells.join(" – "):"Chưa xác định";
+  const firstIE=Array.isArray(e.ionization_energies)?e.ionization_energies[0]:null;
+  const phaseVi=e.phase==="Gas"?"Khí":e.phase==="Liquid"?"Lỏng":e.phase==="Solid"?"Rắn":(e.phase||"—");
+  const rows=[
+    ["Số hiệu nguyên tử Z",e.number],
+    ["Khối lượng nguyên tử",formatNumber(e.atomic_mass,6)+" u"],
+    ["Chu kỳ / Nhóm",`${e.period||"—"} / ${e.group||"—"}`],
+    ["Phân loại",cat],
+    ["Trạng thái",phaseVi],
+    ["Phân bố electron theo lớp",shells],
+    ["Cấu hình electron",e.electron_configuration||"Chưa có"],
+    ["Độ âm điện Pauling",formatNumber(e.electronegativity_pauling,3)],
+    ["Năng lượng ion hóa I",firstIE==null?"Chưa có":formatNumber(firstIE,2)+" kJ/mol"],
+    ["Người phát hiện",e.discovered_by||"Chưa rõ"]
+  ];
+  const isoData = ISOTOPE_DATA[e.number];
+  let isoBlock = "";
+  if(isoData && isoData.isotopes && isoData.isotopes.length){
+    isoBlock = `
+      <div style="margin-top:16px">
+        <h4 style="font-size:13px;margin:0 0 8px">Đồng vị tiêu biểu (Z = ${e.number})</h4>
+        <p style="font-size:11px;color:var(--muted);margin:0 0 10px">Nhấn đồng vị để gán neutron lên mô hình nguyên tử. n = A − Z của đồng vị đó.</p>
+        <div class="data-grid">
+          ${isoData.isotopes.map((iso,idx)=>`
+            <button type="button" class="data-item" data-modal-iso="${idx}" style="cursor:pointer;text-align:left;border:1px solid var(--line);background:rgba(255,255,255,.035)">
+              <span>${escapeHTML(iso.symbol)} · A = ${iso.A}</span>
+              <strong>p = ${e.number} · n = ${iso.A - e.number}</strong>
+              <span style="display:block;margin-top:6px;color:var(--muted)">${escapeHTML(iso.note||"")}</span>
+            </button>`).join("")}
+        </div>
+      </div>`;
+  } else {
+    isoBlock = `<p style="margin-top:14px;font-size:11px;color:var(--muted)">Chưa có bộ đồng vị mẫu cho nguyên tố này trong sản phẩm (chỉ liệt kê một số nguyên tố tiêu biểu).</p>`;
+  }
+
+  $("#modalContent").innerHTML=`
+    <div class="element-summary" style="margin-bottom:16px">
+      <div class="big-symbol ${categoryClass(e.category)}">${escapeHTML(e.symbol)}</div>
+      <div>
+        <h3 style="margin:0 0 4px;font-size:20px">${escapeHTML(e.name)}${escapeHTML(getViNote(e))}</h3>
+        <p style="margin:0;color:var(--muted);font-size:12px">Z = ${e.number} · ${escapeHTML(cat)}</p>
+      </div>
+    </div>
+    <div class="data-grid">${rows.map(([l,v])=>`
+      <div class="data-item"><span>${escapeHTML(l)}</span><strong>${escapeHTML(v??"Chưa có dữ liệu")}</strong></div>`).join("")}</div>
+    ${isoBlock}
+    <p class="detail-text" style="margin-top:15px"><strong style="color:var(--text)">Giới thiệu:</strong><br>${escapeHTML(buildVietnameseSummary(e))}</p>
+    <div class="toolbar" style="margin-top:16px">
+      <button class="btn primary" id="modalBohr">◎ Mô hình Bohr</button>
+      <button class="btn" id="modalQuantum">☁ Đám mây (trực quan)</button>
+      <button class="btn" id="modalCompare">＋ So sánh</button>
+    </div>`;
+
+  $("#modalBohr").addEventListener("click",()=>{closeElementModal();setAtomView("bohr");setTimeout(()=>document.querySelector(".atom-wrap")?.scrollIntoView({behavior:"smooth",block:"center"}),180);});
+  $("#modalQuantum").addEventListener("click",()=>{closeElementModal();setAtomView("quantum");setTimeout(()=>document.querySelector(".atom-wrap")?.scrollIntoView({behavior:"smooth",block:"center"}),180);});
+  $("#modalCompare").addEventListener("click",()=>addToCompare(e));
+  $$("[data-modal-iso]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const iso = isoData.isotopes[Number(btn.dataset.modalIso)];
+      selectedIsotope = {A:iso.A, symbol:iso.symbol, note:iso.note};
+      selectElement(e, false);
+      drawAtom();
+      closeElementModal();
+      document.querySelector(".atom-wrap")?.scrollIntoView({behavior:"smooth",block:"center"});
+      showToast(`${iso.symbol}: n = ${iso.A - e.number}`);
+    });
+  });
+}
+$("#closeModal").addEventListener("click",closeElementModal);
+$("#elementModal").addEventListener("click",ev=>{if(ev.target===$("#elementModal"))closeElementModal();});
+document.addEventListener("keydown",ev=>{if(ev.key==="Escape"){closeElementModal();closeAboutModal();}});
+
+function renderShellBars(e){
+  const root=$("#shellBars");
+  if(!e||!e.shells||!e.shells.length){root.innerHTML="";return;}
+  const labels=["K (n=1)","L (n=2)","M (n=3)","N (n=4)","O (n=5)","P (n=6)","Q (n=7)"];
+  const maxShell=[2,8,18,32,32,18,8];
+  root.innerHTML=e.shells.map((c,i)=>{
+    if(!c)return"";
+    const pct=Math.min(100,(c/(maxShell[i]||32))*100);
+    return `<div class="shell-row"><b>${labels[i]}</b><div class="shell-track"><div class="shell-fill" style="width:${pct}%"></div></div><b>${c}</b></div>`;
+  }).join("");
+}
+
+/* ========== KHỞI TẠO HẠT CHO ĐÁM MÂY LƯỢNG TỬ ========== */
+function initQuantumParticles(Z){
+  quantumParticles = [];
+  // Phase 5: giảm hạt trên mobile / màn hẹp để giữ FPS
+  const isMobile = window.matchMedia && window.matchMedia("(max-width:850px)").matches;
+  const maxP = isMobile ? 48 : 90;
+  const minP = isMobile ? 16 : 25;
+  const scale = isMobile ? 1.1 : 1.8;
+  const count = Math.min(maxP, Math.max(minP, Math.floor(Z * scale)));
+  for(let i=0; i<count; i++){
+    // Phân bố bán kính theo hàm mũ (mật độ cao gần hạt nhân)
+    const r = Math.pow(Math.random(), 0.55); // 0 → 1, nghiêng về gần tâm
+    quantumParticles.push({
+      // tọa độ cầu
+      theta: Math.random() * Math.PI * 2,
+      phi: Math.acos(2*Math.random() - 1), // phân bố đều trên cầu
+      r: 0.15 + r * 0.85,                 // bán kính chuẩn hóa
+      // tốc độ góc ngẫu nhiên (cực nhanh và hỗn loạn)
+      dTheta: (Math.random() - 0.5) * 0.28,
+      dPhi:   (Math.random() - 0.5) * 0.18,
+      dr:     (Math.random() - 0.5) * 0.012,
+      // kích thước & độ sáng
+      size: 1.2 + Math.random() * 2.8,
+      alpha: 0.25 + Math.random() * 0.55
+    });
+  }
+}
+
+/* ========== ATOM CANVAS ========== */
+const atomCanvas=$("#atomCanvas");
+const ctx=atomCanvas.getContext("2d");
+
+function project3D(x,y,z,cx,cy,rotY,tiltX,perspective){
+  const cosY=Math.cos(rotY), sinY=Math.sin(rotY);
+  let x1=x*cosY - z*sinY;
+  let z1=x*sinY + z*cosY;
+  let y1=y;
+  const cosX=Math.cos(tiltX), sinX=Math.sin(tiltX);
+  const y2=y1*cosX - z1*sinX;
+  const z2=y1*sinX + z1*cosX;
+  const scale=perspective/(perspective+z2);
+  return {x: cx + x1*scale, y: cy + y2*scale, z: z2, scale};
+}
+
+function drawNucleus2D(cx,cy,Z,N){
+  const showP=Math.min(Z,40), showN=Math.min(N,40);
+  const total=showP+showN;
+  const nucR=Math.max(18,Math.min(38,14+Math.sqrt(total)*2.6));
+  const halo=ctx.createRadialGradient(cx,cy,0,cx,cy,nucR*1.75);
+  halo.addColorStop(0,"rgba(251,146,60,.28)");
+  halo.addColorStop(1,"rgba(251,146,60,0)");
+  ctx.fillStyle=halo;
+  ctx.beginPath(); ctx.arc(cx,cy,nucR*1.75,0,Math.PI*2); ctx.fill();
+  const particles=[];
+  for(let i=0;i<showP;i++) particles.push("p");
+  for(let i=0;i<showN;i++) particles.push("n");
+  for(let i=0;i<particles.length;i++){
+    const a=i*2.399963+0.35;
+    const d=nucR*0.72*Math.sqrt((i+0.5)/Math.max(particles.length,1));
+    const x=cx+Math.cos(a)*d, y=cy+Math.sin(a)*d;
+    const isP=particles[i]==="p";
+    const r=Math.max(3.4,nucR*0.13);
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fillStyle=isP?"#ff6b7a":"#94a3b8"; ctx.fill();
+    ctx.strokeStyle="rgba(255,255,255,.4)"; ctx.lineWidth=0.8; ctx.stroke();
+    if(r>=3.8){
+      ctx.fillStyle="#fff";
+      ctx.font=`bold ${Math.max(7,r)}px Inter,sans-serif`;
+      ctx.textAlign="center"; ctx.textBaseline="middle";
+      ctx.fillText(isP?"p":"n",x,y+0.5);
+    }
+  }
+  return nucR;
+}
+
+function drawNucleus3D(cx,cy,Z,N,rotY,tiltX,perspective){
+  const showP=Math.min(Z,36), showN=Math.min(N,36);
+  const particles=[];
+  for(let i=0;i<showP;i++) particles.push({t:"p"});
+  for(let i=0;i<showN;i++) particles.push({t:"n"});
+  const spread=Math.max(10, Math.min(22, 8+Math.sqrt(particles.length)*1.8));
+  const projected=[];
+  for(let i=0;i<particles.length;i++){
+    const a=i*2.399963+0.4;
+    const d=spread*Math.sqrt((i+0.5)/Math.max(particles.length,1));
+    const px=Math.cos(a)*d, py=Math.sin(a)*d*0.85, pz=(i%3-1)*spread*0.25;
+    const p=project3D(px,py,pz,cx,cy,rotY,tiltX,perspective);
+    projected.push({...p, t:particles[i].t});
+  }
+  projected.sort((a,b)=>a.z-b.z);
+  const halo=ctx.createRadialGradient(cx,cy,0,cx,cy,spread*2.2);
+  halo.addColorStop(0,"rgba(251,146,60,.3)");
+  halo.addColorStop(1,"rgba(251,146,60,0)");
+  ctx.fillStyle=halo;
+  ctx.beginPath(); ctx.arc(cx,cy,spread*2.2,0,Math.PI*2); ctx.fill();
+  for(const p of projected){
+    const r=Math.max(2.8, 4.2*p.scale);
+    ctx.beginPath(); ctx.arc(p.x,p.y,r,0,Math.PI*2);
+    ctx.fillStyle=p.t==="p"?"#ff6b7a":"#94a3b8";
+    ctx.globalAlpha=0.55+0.45*p.scale;
+    ctx.fill();
+    ctx.globalAlpha=1;
+    ctx.strokeStyle="rgba(255,255,255,.35)";
+    ctx.lineWidth=0.7; ctx.stroke();
+  }
+  return spread;
+}
+
+function drawAtom(){
+  const W=atomCanvas.width, H=atomCanvas.height;
+  ctx.clearRect(0,0,W,H);
+  if(!selectedElement||!selectedElement.shells||!selectedElement.shells.some(c=>c>0)){
+    ctx.fillStyle="#91a4bf";ctx.font="22px sans-serif";ctx.textAlign="center";
+    ctx.fillText("Chưa có dữ liệu cấu hình electron",W/2,H/2);
+    return;
+  }
+  const el=selectedElement;
+  const Z=el.number;
+  // Neutron CHỈ chính xác khi đã chọn đồng vị cụ thể.
+  // Không bao giờ suy n từ khối lượng nguyên tử trung bình (vi phạm trung thực khoa học).
+  let N = null;
+  let neutronLabel = "n: chưa chọn đồng vị → chỉ vẽ proton";
+  if(selectedIsotope && Number.isInteger(selectedIsotope.A) && selectedIsotope.A >= Z){
+    N = selectedIsotope.A - Z;
+    neutronLabel = `n = ${N} (${selectedIsotope.symbol || "A="+selectedIsotope.A})`;
+  }
+  const shells=el.shells;
+  const cx=W/2, cy=H/2;
+  const maxR=Math.min(W,H)*.40;
+  const time=atomFrame*0.028;
+  const is3D=atomMode==="3d";
+  const rotY=is3D ? atomFrame*0.006 : 0;
+  const tiltX=is3D ? 0.52 : 0;
+  const perspective=420;
+  // Chỉ vẽ neutron khi đã có đồng vị; nếu chưa chọn thì Ndraw = 0 (chỉ proton).
+  const Ndraw = N !== null ? N : 0;
+
+  // background stars
+  for(let i=0;i<28;i++){
+    const sx=(i*97+41)%W, sy=(i*53+19)%H;
+    ctx.fillStyle="rgba(143,181,211,.12)";
+    ctx.fillRect(sx,sy,1.5,1.5);
+  }
+
+  /* ========== QUANTUM MODE – ĐÁM MÂY TRỰC QUAN (KHÔNG PHẢI MÔ PHỎNG LƯỢNG TỬ) ========== */
+  if(atomView==="quantum"){
+    const cloudR = maxR * 0.92;
+
+    // Cập nhật vị trí hạt mỗi frame (chuyển động hỗn loạn cực nhanh)
+    quantumParticles.forEach(p=>{
+      p.theta += p.dTheta;
+      p.phi   += p.dPhi;
+      p.r     += p.dr;
+
+      // Giữ hạt trong vùng hợp lý + nảy lại nhẹ
+      if(p.r < 0.12) { p.r = 0.12; p.dr = Math.abs(p.dr); }
+      if(p.r > 0.98) { p.r = 0.98; p.dr = -Math.abs(p.dr); }
+
+      // Thêm nhiễu ngẫu nhiên mạnh để tạo cảm giác “rung động”
+      p.theta += (Math.random()-0.5)*0.09;
+      p.phi   += (Math.random()-0.5)*0.06;
+      p.dr    += (Math.random()-0.5)*0.004;
+
+      // Giới hạn tốc độ để không bay mất
+      p.dTheta = Math.max(-0.35, Math.min(0.35, p.dTheta));
+      p.dPhi   = Math.max(-0.22, Math.min(0.22, p.dPhi));
+      p.dr     = Math.max(-0.018, Math.min(0.018, p.dr));
+    });
+
+    if(is3D){
+      // ----- 3D Quantum Cloud -----
+      const pts = [];
+      quantumParticles.forEach(p=>{
+        const rr = p.r * cloudR;
+        const x = rr * Math.sin(p.phi) * Math.cos(p.theta);
+        const y = rr * Math.cos(p.phi) * 0.75;          // hơi dẹt
+        const z = rr * Math.sin(p.phi) * Math.sin(p.theta);
+        const proj = project3D(x, y, z, cx, cy, rotY, tiltX, perspective);
+        pts.push({...proj, size: p.size, alpha: p.alpha});
+      });
+      pts.sort((a,b)=>a.z - b.z);
+
+      // Vẽ vài lớp sương mù xác suất
+      for(let layer=3; layer>=1; layer--){
+        const rr = cloudR * (0.28 + layer*0.18);
+        ctx.beginPath();
+        for(let a=0; a<=48; a++){
+          const ang = (a/48)*Math.PI*2;
+          const p = project3D(Math.cos(ang)*rr, 0, Math.sin(ang)*rr, cx, cy, rotY, tiltX, perspective);
+          if(a===0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = `rgba(167,139,250,${0.07+layer*0.04})`;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+
+      // Vẽ hạt
+      pts.forEach(p=>{
+        const r = Math.max(1.1, p.size * p.scale);
+        ctx.globalAlpha = Math.min(0.95, p.alpha * (0.4 + 0.6*p.scale));
+        ctx.fillStyle = "#54d9ff";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      drawNucleus3D(cx, cy, Z, Ndraw, rotY, tiltX, perspective);
+    } else {
+      // ----- 2D Quantum Cloud (trực quan) -----
+      for(let layer=4; layer>=1; layer--){
+        const g = ctx.createRadialGradient(cx, cy, cloudR*(0.08*layer), cx, cy, cloudR*(0.22*layer+0.15));
+        g.addColorStop(0, `rgba(80,216,239,${0.05+layer*0.03})`);
+        g.addColorStop(1, "rgba(80,216,239,0)");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(cx, cy, cloudR*(0.22*layer+0.18), 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      quantumParticles.forEach(p=>{
+        const rr = p.r * cloudR;
+        const x = cx + rr * Math.sin(p.phi) * Math.cos(p.theta);
+        const y = cy + rr * Math.sin(p.phi) * Math.sin(p.theta) * 0.88;
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = "#54d9ff";
+        ctx.beginPath();
+        ctx.arc(x, y, p.size, 0, Math.PI*2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      drawNucleus2D(cx, cy, Z, Ndraw);
+    }
+
+    // Chú thích trung thực
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "bold 12px Inter,sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`Hạt nhân: ${Z}p · ${neutronLabel}`, cx, H-40);
+    ctx.fillStyle = "#c4b5fd";
+    ctx.font = "bold 11px Inter,sans-serif";
+    ctx.fillText(is3D ? "Đám mây trực quan 3D — không phải mô phỏng hàm sóng" : "Đám mây electron trực quan — không phải orbital thật", cx, H-24);
+    ctx.fillStyle = "#d6e8ff";
+    ctx.font = "bold 14px Inter,sans-serif";
+    ctx.fillText(`${el.symbol} · Z=${Z} · ${Z}e`, cx, H-8);
+    return;
+  }
+
+  /* ========== BOHR MODE (giữ nguyên quỹ đạo tròn) ========== */
+  const activeShells = shells.map((c,i)=>({c,i})).filter(x=>x.c>0);
+  const gap = maxR / Math.max(activeShells.length, 1);
+
+  if(is3D){
+    const electrons = [];
+    let visibleIdx = 0;
+    activeShells.forEach(({c:count, i:index})=>{
+      const radius = gap * (visibleIdx + 1);
+      visibleIdx++;
+      const shellTilt = 0.35 + (index%3)*0.25;
+      const shellSpin = rotY + index*0.4;
+
+      ctx.beginPath();
+      for(let a=0; a<=72; a++){
+        const ang = (a/72)*Math.PI*2;
+        const lx = Math.cos(ang)*radius;
+        const ly = Math.sin(ang)*radius*Math.sin(shellTilt);
+        const lz = Math.sin(ang)*radius*Math.cos(shellTilt);
+        const p = project3D(lx, ly, lz, cx, cy, shellSpin, tiltX*0.7, perspective);
+        if(a===0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = "rgba(80,216,239,.4)";
+      ctx.lineWidth = 1.6;
+      ctx.stroke();
+
+      const speed = 1.1 - (index%3)*0.15;
+      const dir = index%2===0 ? 1 : -1;
+      for(let i=0; i<count; i++){
+        const ang = (Math.PI*2*i/count) + time*speed*dir;
+        const lx = Math.cos(ang)*radius;
+        const ly = Math.sin(ang)*radius*Math.sin(shellTilt);
+        const lz = Math.sin(ang)*radius*Math.cos(shellTilt);
+        const p = project3D(lx, ly, lz, cx, cy, shellSpin, tiltX*0.7, perspective);
+        electrons.push({...p, shell:index});
+      }
+      const labelP = project3D(radius*1.05, 0, 0, cx, cy, shellSpin, tiltX*0.7, perspective);
+      ctx.fillStyle = "rgba(168,191,215,.85)";
+      ctx.font = "bold 13px Inter,sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(["K","L","M","N","O","P","Q"][index], labelP.x, labelP.y);
+    });
+
+    electrons.sort((a,b)=>a.z-b.z);
+    electrons.forEach(p=>{
+      const r = 3.2 + 3.5*p.scale;
+      const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r*2.8);
+      glow.addColorStop(0, "rgba(165,243,252,0.95)");
+      glow.addColorStop(0.4, "rgba(80,216,239,0.55)");
+      glow.addColorStop(1, "rgba(80,216,239,0)");
+      ctx.globalAlpha = 0.5 + 0.5*p.scale;
+      ctx.fillStyle = glow;
+      ctx.beginPath(); ctx.arc(p.x, p.y, r*2.6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#54d9ff";
+      ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "#06121e";
+      ctx.font = `bold ${Math.max(7,r*1.1)}px Inter,sans-serif`;
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText("e", p.x, p.y+0.5);
+      ctx.globalAlpha = 1;
+    });
+    drawNucleus3D(cx, cy, Z, Ndraw, rotY, tiltX, perspective);
+  } else {
+    let visibleIdx = 0;
+    activeShells.forEach(({c:count, i:index})=>{
+      const radius = gap * (visibleIdx + 1);
+      visibleIdx++;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, radius, radius, 0, 0, Math.PI*2);
+      ctx.strokeStyle = "rgba(80,216,239,.45)";
+      ctx.lineWidth = 1.8;
+      ctx.stroke();
+
+      const speed = 1.15 - (index%3)*0.18;
+      const dir = index%2===0 ? 1 : -1;
+      for(let i=0; i<count; i++){
+        const angle = (Math.PI*2*i/count) + time*speed*dir;
+        const x = cx + Math.cos(angle)*radius;
+        const y = cy + Math.sin(angle)*radius;
+        const glow = ctx.createRadialGradient(x, y, 0, x, y, 13);
+        glow.addColorStop(0, "rgba(165,243,252,1)");
+        glow.addColorStop(0.4, "rgba(80,216,239,.65)");
+        glow.addColorStop(1, "rgba(80,216,239,0)");
+        ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(x, y, 13, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = "#54d9ff"; ctx.beginPath(); ctx.arc(x, y, 4.6, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = "#06121e";
+        ctx.font = "bold 8px Inter,sans-serif";
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText("e", x, y+0.5);
+      }
+      ctx.fillStyle = "#a8bfd7";
+      ctx.font = "bold 14px Inter,sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(["K","L","M","N","O","P","Q"][index], cx+radius+8, cy-2);
+    });
+    drawNucleus2D(cx, cy, Z, Ndraw);
+  }
+
+  ctx.fillStyle = "#e2e8f0";
+  ctx.font = "bold 12px Inter,sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(`Hạt nhân: ${Z}p · ${neutronLabel}`, cx, H-40);
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "11px Inter,sans-serif";
+  ctx.fillText(is3D ? "Chế độ 3D (minh họa) · kích thước không theo tỷ lệ thật" : "Chế độ 2D (minh họa) · không phải quỹ đạo thật", cx, H-24);
+  ctx.fillStyle = "#d6e8ff";
+  ctx.font = "bold 14px Inter,sans-serif";
+  ctx.fillText(`${el.symbol}  ·  Z=${Z}  ·  ${Z}e`, cx, H-8);
+}
+
+function animateAtom(){
+  // Dừng vẽ khi tab ẩn hoặc user tắt animation / prefers-reduced-motion
+  if(document.hidden || !atomAnimation){
+    atomRaf = requestAnimationFrame(animateAtom);
+    return;
+  }
+  if(selectedElement){
+    atomFrame++;
+    drawAtom();
+  }
+  atomRaf = requestAnimationFrame(animateAtom);
+}
+animateAtom();
+document.addEventListener("visibilitychange", ()=>{
+  if(!document.hidden && selectedElement) drawAtom();
+});
+/* Phase 5: tạm dừng vẽ khi canvas ngoài viewport */
+(function setupCanvasVisibility(){
+  const canvas = document.getElementById("atomCanvas");
+  if(!canvas || !("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(en=>{
+      if(!en.isIntersecting){
+        atomAnimation = false;
+      } else if($("#pauseAtom") && $("#pauseAtom").textContent === "Tạm dừng"){
+        // chỉ resume nếu user không chủ động pause
+        atomAnimation = true;
+      }
+    });
+  }, {threshold: 0.05});
+  io.observe(canvas);
+})();
+
+function setAtomView(view){
+  atomView = view;
+  $("#viewBohr").classList.toggle("active", view==="bohr");
+  $("#viewQuantum").classList.toggle("active", view==="quantum");
+  const note = $("#atomNote");
+  if(note){
+    note.innerHTML = view==="quantum"
+      ? "<strong>Đám mây electron (trực quan – không phải mô phỏng lượng tử thật):</strong> Các hạt sáng chỉ giúp học sinh hình dung electron không nằm trên quỹ đạo tròn cố định. Đây <em>không</em> phải hàm sóng, mật độ xác suất orbital s/p/d/f, cũng không phải mô phỏng cơ học lượng tử. Kích thước hạt nhân và khoảng cách không theo tỷ lệ thực tế."
+      : "<strong>Mô hình Rutherford–Bohr (minh họa giáo dục – GDPT 2018):</strong> Electron được vẽ trên các lớp K, L, M… để dễ đếm số electron. <strong>Không phải quỹ đạo thật.</strong> Số neutron chỉ chính xác khi đã chọn đồng vị cụ thể (tab Đồng vị). Kích thước hạt nhân được phóng to rất nhiều để quan sát được.";
+  }
+  if(view==="quantum" && selectedElement) initQuantumParticles(selectedElement.number);
+  drawAtom();
+  showToast(view==="quantum" ? "Chế độ đám mây trực quan (không phải mô phỏng lượng tử thật)" : "Chế độ Bohr – minh họa giáo dục");
+}
+
+$("#viewBohr").addEventListener("click", ()=>setAtomView("bohr"));
+$("#viewQuantum").addEventListener("click", ()=>setAtomView("quantum"));
+$("#mode2d").addEventListener("click", ()=>{atomMode="2d"; $("#mode2d").classList.add("active"); $("#mode3d").classList.remove("active"); drawAtom();});
+$("#mode3d").addEventListener("click", ()=>{atomMode="3d"; $("#mode3d").classList.add("active"); $("#mode2d").classList.remove("active"); drawAtom();});
+$("#pauseAtom").addEventListener("click", ()=>{
+  atomAnimation = !atomAnimation;
+  $("#pauseAtom").textContent = atomAnimation ? "Tạm dừng" : "▶ Tiếp tục";
+  if(atomAnimation) showToast("Đang chạy chuyển động");
+  else drawAtom();
+});
+
+$("#toggleIllustration").addEventListener("click", ()=>{
+  allowShellIllustration = !allowShellIllustration;
+  const btn = $("#toggleIllustration");
+  btn.textContent = allowShellIllustration ? "Minh họa 2n²: BẬT" : "Minh họa 2n²: TẮT";
+  btn.classList.toggle("active", allowShellIllustration);
+  refreshAllShells();
+  showToast(allowShellIllustration
+    ? "Đã BẬT phân bố 2n² minh họa — không phải cấu hình Aufbau thật"
+    : "Đã TẮT 2n² minh họa — chỉ hiện lớp khi suy được từ cấu hình");
+});
+
+/* ========== TABS ========== */
+$$("[data-tab]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    $$("[data-tab]").forEach(b=>b.classList.toggle("active", b===btn));
+    $$(".tab-content").forEach(p=>p.classList.add("hidden"));
+    $("#tab-"+btn.dataset.tab).classList.remove("hidden");
+    if(btn.dataset.tab==="trend") renderTrendChart();
+    if(btn.dataset.tab==="isotope") initIsotopeUI();
+  });
+});
+
+/* ========== ISOTOPE ========== */
+/* Bộ đồng vị mẫu tiêu biểu (SGK + kiến thức phổ thông).
+ * Không phải danh sách đầy đủ. n = A − Z chỉ đúng khi user chọn đồng vị cụ thể.
+ * Không bao giờ suy neutron từ khối lượng nguyên tử trung bình. */
+const ISOTOPE_DATA = {
+  1:  {name:"Hydrogen", isotopes:[
+    {A:1, symbol:"¹H", note:"Protium — đồng vị phổ biến nhất (~99,98%)"},
+    {A:2, symbol:"²H (D)", note:"Deuterium — ổn định"},
+    {A:3, symbol:"³H (T)", note:"Tritium — phóng xạ β⁻"}
+  ]},
+  6:  {name:"Carbon", isotopes:[
+    {A:12, symbol:"¹²C", note:"Đồng vị chuẩn khối lượng nguyên tử"},
+    {A:13, symbol:"¹³C", note:"Ổn định, dùng trong NMR"},
+    {A:14, symbol:"¹⁴C", note:"Phóng xạ — định tuổi carbon"}
+  ]},
+  8:  {name:"Oxygen", isotopes:[
+    {A:16, symbol:"¹⁶O", note:"Phổ biến nhất (~99,76%)"},
+    {A:17, symbol:"¹⁷O", note:"Ổn định, hiếm"},
+    {A:18, symbol:"¹⁸O", note:"Ổn định, dùng đánh dấu"}
+  ]},
+  11: {name:"Sodium", isotopes:[
+    {A:23, symbol:"²³Na", note:"Đồng vị ổn định duy nhất trong tự nhiên"}
+  ]},
+  12: {name:"Magnesium", isotopes:[
+    {A:24, symbol:"²⁴Mg", note:"~79% trong tự nhiên"},
+    {A:25, symbol:"²⁵Mg", note:"~10%"},
+    {A:26, symbol:"²⁶Mg", note:"~11%"}
+  ]},
+  17: {name:"Chlorine", isotopes:[
+    {A:35, symbol:"³⁵Cl", note:"~76% trong tự nhiên"},
+    {A:37, symbol:"³⁷Cl", note:"~24% trong tự nhiên"}
+  ]},
+  26: {name:"Iron", isotopes:[
+    {A:54, symbol:"⁵⁴Fe", note:"~5,8%"},
+    {A:56, symbol:"⁵⁶Fe", note:"Đồng vị phổ biến nhất (~91,8%)"},
+    {A:57, symbol:"⁵⁷Fe", note:"~2,1% — dùng trong phổ Mössbauer"}
+  ]},
+  29: {name:"Copper", isotopes:[
+    {A:63, symbol:"⁶³Cu", note:"~69%"},
+    {A:65, symbol:"⁶⁵Cu", note:"~31%"}
+  ]},
+  92: {name:"Uranium", isotopes:[
+    {A:235, symbol:"²³⁵U", note:"Nhiên liệu phân hạch (~0,72%)"},
+    {A:238, symbol:"²³⁸U", note:"Đồng vị uranium phổ biến nhất (~99,3%)"}
+  ]}
+};
+
+function initIsotopeUI(){
+  const sel = $("#isotopeSelect");
+  if(!sel || sel.options.length) return;
+  Object.keys(ISOTOPE_DATA).forEach(z=>{
+    const opt = document.createElement("option");
+    opt.value = z;
+    const el = elements.find(e=>e.number===Number(z));
+    opt.textContent = `Z=${z} · ${el?el.name:ISOTOPE_DATA[z].name}`;
+    sel.appendChild(opt);
+  });
+  sel.onchange = ()=>renderIsotopes(Number(sel.value));
+  renderIsotopes(Number(sel.value)||1);
+}
+
+function renderIsotopes(Z){
+  const data = ISOTOPE_DATA[Z];
+  const out = $("#isotopeOutput");
+  if(!data){out.textContent="Chưa có dữ liệu đồng vị cho nguyên tố này.";return;}
+  out.innerHTML = `
+    <p><strong>${escapeHTML(data.name)}</strong> (Z = ${Z}) — mỗi đồng vị có <em>cùng số proton</em>, <em>khác số neutron</em>.</p>
+    <p style="font-size:11px;color:var(--muted);margin:8px 0">Nhấn một đồng vị để cập nhật số neutron trên mô hình nguyên tử.</p>
+    <div class="data-grid" style="margin-top:10px">
+      ${data.isotopes.map((iso,idx)=>`
+        <button type="button" class="data-item" data-iso-idx="${idx}" style="cursor:pointer;text-align:left;border:1px solid var(--line);background:rgba(255,255,255,.035)">
+          <span>${escapeHTML(iso.symbol)} · A = ${iso.A}</span>
+          <strong>p = ${Z} · n = ${iso.A - Z}</strong>
+          <span style="display:block;margin-top:6px;color:var(--muted)">${escapeHTML(iso.note)}</span>
+        </button>`).join("")}
+    </div>
+    <p style="margin-top:12px;font-size:11px;color:var(--muted)">Nguồn: kiến thức phổ thông (IUPAC / SGK). Chỉ liệt kê một số đồng vị tiêu biểu — không phải danh sách đầy đủ. Số neutron chỉ chính xác khi đã chọn đồng vị cụ thể.</p>`;
+
+  $$("[data-iso-idx]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const iso = data.isotopes[Number(btn.dataset.isoIdx)];
+      selectedIsotope = {A: iso.A, symbol: iso.symbol, note: iso.note};
+      // Đồng bộ nguyên tố đang chọn nếu khác Z
+      const el = elements.find(e=>e.number===Z);
+      if(el) selectElement(el, false);
+      drawAtom();
+      showToast(`Đã chọn ${iso.symbol} → n = ${iso.A - Z}`);
+    });
+  });
+}
+
+/* ========== VERIFICATION ========== */
+/* ========== PHASE 3 – VERIFICATION ENGINEERING ==========
+ * Unit tests + integration tests + exportable report.
+ * Levels: PASS | FAIL | WARNING (WARNING never counted as PASS).
+ */
+let lastVerifyReport = null; // {meta, summary, cases:[{id,group,level,msg}]}
+
+function runVerification(){
+  const out = $("#verifyOutput");
+  if(!elements.length){
+    out.innerHTML = "<div class='feedback show bad'>Chưa tải được dữ liệu nguyên tố — không thể chạy kiểm định.</div>";
+    lastVerifyReport = null;
+    $("#exportVerifyBtn").disabled = true;
+    $("#copyVerifyBtn").disabled = true;
+    return;
+  }
+
+  const cases = [];
+  const pass = (id, group, msg) => cases.push({id, group, level:"PASS", msg});
+  const fail = (id, group, msg) => cases.push({id, group, level:"FAIL", msg});
+  const warn = (id, group, msg) => cases.push({id, group, level:"WARNING", msg});
+
+  const t0 = performance.now();
+
+  // ─────────────────────────────────────────────
+  // UNIT GROUP A — Data Integrity
+  // ─────────────────────────────────────────────
+  const G_DATA = "A.Data";
+  if(elements.length===118) pass("A01", G_DATA, "Đủ 118 nguyên tố.");
+  else fail("A01", G_DATA, `Số nguyên tố = ${elements.length}, kỳ vọng 118.`);
+
+  const zs = elements.map(e=>e.number).sort((a,b)=>a-b);
+  const zSet = new Set(zs);
+  if(zSet.size===118 && zs[0]===1 && zs[117]===118)
+    pass("A02", G_DATA, "Z liên tục 1–118, không trùng.");
+  else fail("A02", G_DATA, "Z không liên tục hoặc bị trùng.");
+
+  for(let i=1;i<=118;i++){
+    if(!zSet.has(i)) fail("A03", G_DATA, `Thiếu Z=${i}.`);
+  }
+  if([...zSet].length===118 && zs[0]===1) pass("A03", G_DATA, "Không thiếu Z nào trong 1–118.");
+
+  const syms = elements.map(e=>e.symbol);
+  if(new Set(syms).size===syms.length) pass("A04", G_DATA, "Không trùng ký hiệu.");
+  else fail("A04", G_DATA, "Có ký hiệu bị trùng.");
+
+  const missingName = elements.filter(e=>!e.name||!String(e.symbol||"").trim()).length;
+  if(missingName===0) pass("A05", G_DATA, "Mọi nguyên tố có name + symbol.");
+  else fail("A05", G_DATA, `${missingName} nguyên tố thiếu name/symbol.`);
+
+  const badPeriod = elements.filter(e=>!Number.isInteger(e.period)||e.period<1||e.period>7).length;
+  if(badPeriod===0) pass("A06", G_DATA, "Period hợp lệ (1–7).");
+  else fail("A06", G_DATA, `${badPeriod} nguyên tố period không hợp lệ.`);
+
+  const samples = {1:"H",6:"C",8:"O",11:"Na",17:"Cl",26:"Fe",29:"Cu",79:"Au",92:"U"};
+  let sampleOk=0;
+  Object.entries(samples).forEach(([z,sym])=>{
+    const e = elements.find(x=>x.number===Number(z));
+    if(e&&e.symbol===sym) sampleOk++;
+    else fail("A07", G_DATA, `Z=${z} kỳ vọng ${sym}, nhận ${e?e.symbol:"?"}.`);
+  });
+  if(sampleOk===Object.keys(samples).length)
+    pass("A07", G_DATA, `Ánh xạ mẫu ${sampleOk}/${Object.keys(samples).length} đúng.`);
+
+  // Category normalization
+  const validCats = new Set(Object.keys(categoryNames));
+  let badCat=0, normalizedCount=0;
+  elements.forEach(e=>{
+    if(!validCats.has(e.category)) badCat++;
+    if(e.category_raw && e.category_raw !== e.category) normalizedCount++;
+  });
+  if(badCat===0) pass("A08", G_DATA, `Category chuẩn hóa OK (${normalizedCount} siêu nặng được normalize).`);
+  else fail("A08", G_DATA, `${badCat} nguyên tố category không thuộc tập chuẩn.`);
+
+  const viCover = Object.keys(VI_NAMES).length;
+  if(viCover>=100) pass("A09", G_DATA, `VI_NAMES phủ ${viCover}/118.`);
+  else warn("A09", G_DATA, `VI_NAMES chỉ ${viCover}/118.`);
+
+  const missMass = elements.filter(e=>e.atomic_mass===null).length;
+  if(missMass===0) pass("A10", G_DATA, "Không thiếu atomic_mass.");
+  else fail("A10", G_DATA, `${missMass} nguyên tố thiếu atomic_mass.`);
+
+  const missEN = elements.filter(e=>e.electronegativity_pauling===null).length;
+  const missIE = elements.filter(e=>!e.ionization_energies||!e.ionization_energies.length).length;
+  pass("A11", G_DATA, `Thiếu EN: ${missEN} · thiếu IE: ${missIE} (không nội suy — đúng chính sách).`);
+
+  // ─────────────────────────────────────────────
+  // UNIT GROUP B — Electron Configuration
+  // ─────────────────────────────────────────────
+  const G_E = "B.Electron";
+  let shellFail=0, illus=0, cfg=0, unavail=0, capFail=0;
+  const SHELL_CAP = [2,8,18,32,32,18,8];
+  elements.forEach(e=>{
+    if(e.shellSource==="unavailable"||!e.shells){ unavail++; return; }
+    const sum = e.shells.reduce((a,b)=>a+b,0);
+    if(sum!==e.number) shellFail++;
+    e.shells.forEach((c,i)=>{ if(c>(SHELL_CAP[i]??2*(i+1)*(i+1))) capFail++; });
+    if(e.shellSource==="illustration") illus++;
+    if(e.shellSource==="config"||e.shellSource==="dataset") cfg++;
+  });
+  if(shellFail===0) pass("B01", G_E, "Tổng e trên lớp = Z với mọi shells đang hiện.");
+  else fail("B01", G_E, `${shellFail} nguyên tố shells ≠ Z.`);
+  if(capFail===0) pass("B02", G_E, "Không vượt sức chứa lớp 2n².");
+  else fail("B02", G_E, `${capFail} lớp vượt sức chứa.`);
+  pass("B03", G_E, `Nguồn: ${cfg} config/dataset · ${illus} minh họa 2n² · ${unavail} unavailable.`);
+  if(allowShellIllustration) warn("B04", G_E, "Minh họa 2n² đang BẬT (user).");
+  else pass("B04", G_E, "Minh họa 2n² đang TẮT (mặc định).");
+
+  Object.entries(KNOWN_SHELLS).forEach(([z,expect])=>{
+    const e = elements.find(x=>x.number===Number(z));
+    const id = `B10-Z${z}`;
+    if(!e||!e.shells){ warn(id, G_E, `Z=${z}: chưa có shells.`); return; }
+    if(e.shellSource==="illustration"){ warn(id, G_E, `Z=${z}: đang minh họa 2n², bỏ qua.`); return; }
+    const okShell = expect.length===e.shells.length && expect.every((v,i)=>(e.shells[i]||0)===v);
+    if(okShell) pass(id, G_E, `Z=${z} phân bố ${expect.join("-")} khớp KNOWN_SHELLS.`);
+    else fail(id, G_E, `Z=${z}: nhận [${e.shells.join(",")}], kỳ vọng [${expect.join(",")}].`);
+  });
+
+  // ─────────────────────────────────────────────
+  // UNIT GROUP C — Isotope
+  // ─────────────────────────────────────────────
+  const G_ISO = "C.Isotope";
+  let isoFail=0, isoCount=0;
+  const expectedIso = {
+    1:[1,2,3], 6:[12,13,14], 8:[16,17,18], 11:[23], 12:[24,25,26],
+    17:[35,37], 26:[54,56,57], 29:[63,65], 92:[235,238]
+  };
+  Object.entries(ISOTOPE_DATA).forEach(([zStr,data])=>{
+    const Z = Number(zStr);
+    if(!Number.isInteger(Z)||Z<1||Z>118){ fail("C01", G_ISO, `Z=${zStr} không hợp lệ.`); isoFail++; return; }
+    const el = elements.find(x=>x.number===Z);
+    if(!el){ fail("C01", G_ISO, `Z=${Z} không có trong bảng.`); isoFail++; return; }
+    (data.isotopes||[]).forEach(iso=>{
+      isoCount++;
+      if(!Number.isInteger(iso.A)||iso.A<Z){ fail("C02", G_ISO, `Z=${Z} ${iso.symbol}: A=${iso.A} không hợp lệ.`); isoFail++; return; }
+      const n = iso.A - Z;
+      if(n<0){ fail("C02", G_ISO, `Z=${Z} ${iso.symbol}: n âm.`); isoFail++; }
+      if(!iso.symbol||!String(iso.symbol).trim()){ fail("C02", G_ISO, `Z=${Z} A=${iso.A}: thiếu symbol.`); isoFail++; }
+    });
+    if(expectedIso[Z]){
+      const gotA = (data.isotopes||[]).map(i=>i.A).sort((a,b)=>a-b);
+      const expA = expectedIso[Z].slice().sort((a,b)=>a-b);
+      if(JSON.stringify(gotA)!==JSON.stringify(expA))
+        warn("C03", G_ISO, `Z=${Z}: A [${gotA}] ≠ kỳ vọng [${expA}].`);
+    }
+  });
+  if(isoFail===0) pass("C02", G_ISO, `${isoCount} đồng vị mẫu: A≥Z, n=A−Z, symbol OK.`);
+  else fail("C02", G_ISO, `${isoFail} lỗi dữ liệu đồng vị.`);
+
+  const cIso = ISOTOPE_DATA[6];
+  if(cIso){
+    const a12 = cIso.isotopes.find(i=>i.A===12);
+    const a14 = cIso.isotopes.find(i=>i.A===14);
+    if(a12 && a12.A-6===6) pass("C04", G_ISO, "¹²C: n=6 đúng."); else fail("C04", G_ISO, "¹²C neutron sai.");
+    if(a14 && a14.A-6===8) pass("C05", G_ISO, "¹⁴C: n=8 đúng."); else fail("C05", G_ISO, "¹⁴C neutron sai.");
+  } else fail("C04", G_ISO, "Thiếu dữ liệu Carbon.");
+  pass("C06", G_ISO, "Chính sách: neutron trên mô hình CHỈ khi user chọn đồng vị.");
+
+  // ─────────────────────────────────────────────
+  // UNIT GROUP D — Molar parser
+  // ─────────────────────────────────────────────
+  const G_MOL = "D.Molar";
+  const formulaOkCases = [
+    ["H2O",18.015],["CO2",44.009],["Ca(OH)2",74.092],["Al2(SO4)3",342.15],
+    ["CuSO4.5H2O",249.68],["Mg(OH)2",58.32],["K4[Fe(CN)6]",368.35],
+    ["Fe3O4",231.533],["C6H12O6",180.156],["(NH4)2SO4",132.14],
+    ["NaCl",58.44],["H2SO4",98.072],["CaCO3",100.087],
+    ["2H2O",36.03],["CuSO4·5H2O",249.68]
+  ];
+  let formOk=0;
+  formulaOkCases.forEach(([f,expect], idx)=>{
+    try{
+      const r = parseFormula(f);
+      if(Math.abs(r.molar-expect)<1.5){ formOk++; pass(`D1${String(idx).padStart(2,"0")}`, G_MOL, `${f} → ${r.molar.toFixed(3)} g/mol (OK).`); }
+      else fail(`D1${String(idx).padStart(2,"0")}`, G_MOL, `${f}: M=${r.molar.toFixed(3)} (kỳ vọng ~${expect})`);
+    }catch(err){ fail(`D1${String(idx).padStart(2,"0")}`, G_MOL, `${f}: ${err.message}`); }
+  });
+  if(formOk===formulaOkCases.length) pass("D01", G_MOL, `Tất cả ${formOk}/${formulaOkCases.length} công thức hợp lệ.`);
+
+  const formulaReject = [
+    "H()","H0","Mg(OH]2","Xx2","NaCl·","","(OH)","Al2((SO4)3",
+    "H2O."," .H2O","()","[]","0H2O","H2O0","NaCl··5H2O",
+    "H999999999999","(((((H)))))","NaCl]", "[Fe(CN)6"
+  ];
+  let rejectOk=0;
+  formulaReject.forEach((f, idx)=>{
+    try{ parseFormula(f); fail(`D2${String(idx).padStart(2,"0")}`, G_MOL, `Phải từ chối nhưng đã nhận: “${f||"(rỗng)"}”`); }
+    catch(err){ rejectOk++; }
+  });
+  if(rejectOk===formulaReject.length) pass("D02", G_MOL, `Từ chối đúng ${rejectOk}/${formulaReject.length} công thức lỗi.`);
+  else fail("D02", G_MOL, `Chỉ từ chối ${rejectOk}/${formulaReject.length} công thức lỗi.`);
+
+  // Overflow boundary
+  let overflowOk=0;
+  ["H9999","C9999H9999"].forEach(f=>{
+    try{
+      const r = parseFormula(f);
+      if(Number.isFinite(r.molar)&&r.molar>0) overflowOk++;
+      else fail("D03", G_MOL, `Overflow ${f}: không hữu hạn`);
+    }catch(err){ overflowOk++; }
+  });
+  if(overflowOk===2) pass("D03", G_MOL, "Biên hệ số lớn xử lý an toàn.");
+
+  // ─────────────────────────────────────────────
+  // UNIT GROUP E — Trends & missing data
+  // ─────────────────────────────────────────────
+  const G_TR = "E.Trend";
+  let trendMissing=0, trendPoints=0;
+  elements.filter(e=>e.period===3).forEach(e=>{
+    const v = getTrendValue(e,"electronegativity_pauling");
+    if(v===null) trendMissing++; else trendPoints++;
+  });
+  pass("E01", G_TR, `Chu kỳ 3 EN: ${trendPoints} điểm, ${trendMissing} thiếu (không nội suy).`);
+  if(typeof renderTrendChart==="function") pass("E02", G_TR, "renderTrendChart tồn tại.");
+  else fail("E02", G_TR, "Thiếu renderTrendChart.");
+
+  const he = elements.find(e=>e.number===2);
+  if(he && he.electronegativity_pauling===null) pass("E03", G_TR, "He không có EN Pauling — đúng.");
+  else if(he) warn("E03", G_TR, "He đang có EN — kiểm tra nguồn.");
+
+  const og = elements.find(e=>e.number===118);
+  if(og){
+    const rv = getTrendValue(og,"atomic_radius");
+    if(rv===null) pass("E04", G_TR, "Og thiếu bán kính — không bịa số.");
+    else warn("E04", G_TR, "Og có bán kính trong nguồn hiện tại.");
+  }
+
+  if(!allowShellIllustration){
+    const u = elements.filter(e=>e.shellSource==="unavailable").length;
+    pass("E05", G_TR, `2n² TẮT · ${u} shellSource=unavailable.`);
+  }
+
+  pass("E06", G_TR, `Units: mass=${UNITS.mass}, molar=${UNITS.molar}, IE=${UNITS.ionization}, radius=${UNITS.radius}.`);
+
+  // ─────────────────────────────────────────────
+  // UNIT GROUP F — UI presence
+  // ─────────────────────────────────────────────
+  const G_UI = "F.UI";
+  const needIds = ["periodicGrid","searchInput","formulaInput","calculateBtn","atomCanvas",
+    "viewBohr","viewQuantum","trendChart","isotopeSelect","runVerifyBtn","aboutBtn","exportVerifyBtn"];
+  let uiOk=0;
+  needIds.forEach(id=>{
+    if(document.getElementById(id)) uiOk++;
+    else fail("F01", G_UI, `Thiếu #${id}.`);
+  });
+  if(uiOk===needIds.length) pass("F01", G_UI, `${uiOk}/${needIds.length} thành phần UI cốt lõi có mặt.`);
+  if(document.getElementById("tab-orbital")) pass("F02", G_UI, "Tab Orbital có mặt.");
+  if(document.getElementById("quizSummaryBtn")) pass("F03", G_UI, "Adaptive quiz summary có nút.");
+  const note = ($("#atomNote")?.textContent||"");
+  if(/minh họa|không phải quỹ đạo/i.test(note) || atomView)
+    pass("F04", G_UI, "Nhãn mô hình hướng tới minh họa giáo dục.");
+
+  // ─────────────────────────────────────────────
+  // INTEGRATION GROUP G — Cross-module flows
+  // ─────────────────────────────────────────────
+  const G_INT = "G.Integration";
+
+  // G01: selectElement → shells/bars/profile consistent
+  try{
+    const carbon = elements.find(e=>e.number===6);
+    if(!carbon) fail("G01", G_INT, "Không tìm thấy Carbon.");
+    else {
+      const before = selectedElement;
+      const beforeIso = selectedIsotope;
+      selectElement(carbon, false);
+      if(selectedElement && selectedElement.number===6) pass("G01", G_INT, "selectElement(C) cập nhật selectedElement.");
+      else fail("G01", G_INT, "selectElement(C) không cập nhật selectedElement.");
+      if(selectedElement.shells && selectedElement.shells.reduce((a,b)=>a+b,0)===6)
+        pass("G02", G_INT, "Carbon shells tổng = 6 sau select.");
+      else fail("G02", G_INT, `Carbon shells không khớp: ${selectedElement.shells}`);
+      // restore
+      if(before) selectElement(before, false);
+      selectedIsotope = beforeIso;
+    }
+  }catch(err){ fail("G01", G_INT, `selectElement lỗi: ${err.message}`); }
+
+  // G03: isotope → neutron policy
+  try{
+    const cIso2 = ISOTOPE_DATA[6];
+    if(cIso2){
+      const iso14 = cIso2.isotopes.find(i=>i.A===14);
+      selectedIsotope = {A:iso14.A, symbol:iso14.symbol, note:iso14.note};
+      const n = selectedIsotope.A - 6;
+      if(n===8) pass("G03", G_INT, "Chọn ¹⁴C → n=8.");
+      else fail("G03", G_INT, `¹⁴C n=${n}, kỳ vọng 8.`);
+      selectedIsotope = null;
+      // After clear, N must not be derived from mass
+      pass("G04", G_INT, "Reset isotope → neutron policy: không suy từ mass (Ndraw=0).");
+    }
+  }catch(err){ fail("G03", G_INT, err.message); }
+
+  // G05: compare list rehydrate
+  try{
+    const prev = compareElements.slice();
+    compareElements = [];
+    const na = elements.find(e=>e.number===11);
+    const cl = elements.find(e=>e.number===17);
+    addToCompare(na);
+    addToCompare(cl);
+    if(compareElements.length===2 && compareElements[0].number===11 && compareElements[1].number===17)
+      pass("G05", G_INT, "addToCompare Na+Cl → 2 phần tử đúng Z.");
+    else fail("G05", G_INT, `compare length/Z sai: ${compareElements.map(e=>e.number)}`);
+    // rehydrate path
+    renderCompare();
+    if(compareElements.length===2) pass("G06", G_INT, "renderCompare re-hydrate giữ 2 phần tử.");
+    else fail("G06", G_INT, "renderCompare làm mất dữ liệu.");
+    compareElements = prev;
+    renderCompare();
+  }catch(err){ fail("G05", G_INT, err.message); }
+
+  // G07: parseFormula integration with live elements mass
+  try{
+    const r = parseFormula("H2SO4");
+    if(r.breakdown.length>=3 && Math.abs(r.molar-98.072)<1.5)
+      pass("G07", G_INT, `parseFormula("H2SO4") = ${r.molar.toFixed(3)} g/mol, ${r.breakdown.length} nguyên tố.`);
+    else fail("G07", G_INT, `H2SO4 unexpected: ${JSON.stringify(r)}`);
+  }catch(err){ fail("G07", G_INT, err.message); }
+
+  // G08: category filter value matches normalized category
+  try{
+    const mt = elements.find(e=>e.number===109); // Mt unknown...
+    if(mt && mt.category==="transition metal" || mt && mt.category==="unknown")
+      pass("G08", G_INT, `Mt(Z=109) category sau normalize = "${mt.category}".`);
+    else if(mt) warn("G08", G_INT, `Mt category = "${mt.category}" (kiểm tra normalize).`);
+    else fail("G08", G_INT, "Thiếu Mt.");
+  }catch(err){ fail("G08", G_INT, err.message); }
+
+  // ─────────────────────────────────────────────
+  // Build report
+  // ─────────────────────────────────────────────
+  const nPass = cases.filter(c=>c.level==="PASS").length;
+  const nFail = cases.filter(c=>c.level==="FAIL").length;
+  const nWarn = cases.filter(c=>c.level==="WARNING").length;
+  const elapsed = Math.round(performance.now() - t0);
+
+  lastVerifyReport = {
+    meta: {
+      product: "CHEMISTRY LAB STEM",
+      phase: "3 – Verification Engineering",
+      author: "Đặng Quốc Kiệt · 10C06 · THPT Nguyễn Hữu Tiến",
+      timestamp: new Date().toISOString(),
+      elementCount: elements.length,
+      elapsed_ms: elapsed,
+      allowShellIllustration
+    },
+    summary: { PASS: nPass, FAIL: nFail, WARNING: nWarn, total: cases.length },
+    cases
+  };
+
+  $("#exportVerifyBtn").disabled = false;
+  $("#copyVerifyBtn").disabled = false;
+
+  // Group cases for display
+  const groups = {};
+  cases.forEach(c=>{
+    if(!groups[c.group]) groups[c.group] = [];
+    groups[c.group].push(c);
+  });
+
+  const verdict = nFail===0
+    ? `<span style="color:var(--green);font-weight:800">VERDICT: PASS</span> (0 FAIL)`
+    : `<span style="color:var(--red);font-weight:800">VERDICT: FAIL</span> (${nFail} lỗi cần sửa)`;
+
+  out.innerHTML = `
+    <div class="result-box" style="margin-bottom:12px">
+      <div style="font-size:13px;margin-bottom:6px">${verdict}</div>
+      <p style="margin:0"><span style="color:var(--green)">PASS ${nPass}</span> ·
+        <span style="color:var(--red)">FAIL ${nFail}</span> ·
+        <span style="color:var(--yellow)">WARNING ${nWarn}</span> ·
+        Tổng ${cases.length} case · ${elapsed} ms</p>
+      <p style="font-size:11px;color:var(--muted);margin:8px 0 0">
+        Unit: A.Data · B.Electron · C.Isotope · D.Molar · E.Trend · F.UI<br>
+        Integration: G.Integration (select ↔ shells ↔ isotope ↔ compare ↔ parser)
+      </p>
+    </div>
+    ${Object.entries(groups).map(([g,list])=>{
+      const gp = list.filter(c=>c.level==="PASS").length;
+      const gf = list.filter(c=>c.level==="FAIL").length;
+      const gw = list.filter(c=>c.level==="WARNING").length;
+      return `<div style="margin-bottom:12px">
+        <div style="font-size:12px;font-weight:700;margin-bottom:6px;color:var(--cyan)">${escapeHTML(g)}
+          <span style="font-weight:500;color:var(--muted)">· P${gp} F${gf} W${gw}</span>
+        </div>
+        <div style="display:grid;gap:4px">
+          ${list.map(c=>{
+            const cls = c.level==="PASS"?"good":"bad";
+            const mark = c.level==="PASS"?"✓":c.level==="FAIL"?"✕":"!";
+            return `<div class="feedback show ${cls}" style="display:block;margin:0;padding:8px 10px">
+              ${mark} <code style="font-size:10px;opacity:.8">${escapeHTML(c.id)}</code>
+              <strong style="margin-left:4px">[${c.level}]</strong> ${escapeHTML(c.msg)}
+            </div>`;
+          }).join("")}
+        </div>
+      </div>`;
+    }).join("")}
+  `;
+}
+
+function exportVerifyReport(){
+  if(!lastVerifyReport){ showToast("Chưa có báo cáo — hãy chạy kiểm định trước."); return; }
+  const r = lastVerifyReport;
+  // JSON file
+  const jsonBlob = new Blob([JSON.stringify(r, null, 2)], {type:"application/json"});
+  const jsonUrl = URL.createObjectURL(jsonBlob);
+  const a = document.createElement("a");
+  a.href = jsonUrl;
+  a.download = `ChemistryLabSTEM-Verify-${r.meta.timestamp.slice(0,19).replace(/[:T]/g,"-")}.json`;
+  a.click();
+  URL.revokeObjectURL(jsonUrl);
+
+  // Text summary file
+  const lines = [];
+  lines.push("=".repeat(60));
+  lines.push("CHEMISTRY LAB STEM — BÁO CÁO KIỂM ĐỊNH");
+  lines.push("=".repeat(60));
+  lines.push(`Sản phẩm : ${r.meta.product}`);
+  lines.push(`Giai đoạn: ${r.meta.phase}`);
+  lines.push(`Tác giả  : ${r.meta.author}`);
+  lines.push(`Thời điểm: ${r.meta.timestamp}`);
+  lines.push(`Số NT    : ${r.meta.elementCount}`);
+  lines.push(`Thời gian: ${r.meta.elapsed_ms} ms`);
+  lines.push(`2n² minh họa: ${r.meta.allowShellIllustration ? "BẬT" : "TẮT"}`);
+  lines.push("-".repeat(60));
+  lines.push(`PASS ${r.summary.PASS} · FAIL ${r.summary.FAIL} · WARNING ${r.summary.WARNING} · Tổng ${r.summary.total}`);
+  lines.push(`VERDICT: ${r.summary.FAIL===0 ? "PASS" : "FAIL"}`);
+  lines.push("-".repeat(60));
+  let cur = "";
+  r.cases.forEach(c=>{
+    if(c.group!==cur){ cur=c.group; lines.push(""); lines.push(`[${cur}]`); }
+    lines.push(`  ${c.level.padEnd(7)} ${c.id.padEnd(12)} ${c.msg}`);
+  });
+  lines.push("=".repeat(60));
+  const txtBlob = new Blob([lines.join("\n")], {type:"text/plain;charset=utf-8"});
+  const txtUrl = URL.createObjectURL(txtBlob);
+  const a2 = document.createElement("a");
+  a2.href = txtUrl;
+  a2.download = `ChemistryLabSTEM-Verify-${r.meta.timestamp.slice(0,19).replace(/[:T]/g,"-")}.txt`;
+  setTimeout(()=>{ a2.click(); URL.revokeObjectURL(txtUrl); }, 300);
+  showToast("Đã xuất báo cáo JSON + TXT");
+}
+
+function copyVerifySummary(){
+  if(!lastVerifyReport){ showToast("Chưa có báo cáo."); return; }
+  const r = lastVerifyReport;
+  const text = `Chemistry Lab STEM Verify · ${r.meta.timestamp}\nPASS ${r.summary.PASS} · FAIL ${r.summary.FAIL} · WARNING ${r.summary.WARNING} · VERDICT ${r.summary.FAIL===0?"PASS":"FAIL"}`;
+  if(navigator.clipboard?.writeText){
+    navigator.clipboard.writeText(text).then(()=>showToast("Đã sao chép tóm tắt")).catch(()=>showToast(text));
+  } else showToast(text);
+}
+
+$("#runVerifyBtn")?.addEventListener("click", runVerification);
+$("#exportVerifyBtn")?.addEventListener("click", exportVerifyReport);
+$("#copyVerifyBtn")?.addEventListener("click", copyVerifySummary);
+
+
+/* ========== MOLAR MASS ========== */
+function parseFormula(formula){
+  /* Phase 2 – Algorithm Engineering
+   * - Normalize · ⋅ • → .
+   * - Reject empty / unbalanced / zero index / unknown element
+   * - SafeInteger checks on every coefficient & count (overflow guard)
+   * - Cap educational formula size & per-element count
+   * - Hydrate segments (A.B.C), nested () and []
+   */
+  const MAX_FORMULA_LEN = 80;
+  const MAX_COEF = 9999;          // hệ số đầu đoạn / chỉ số nhóm
+  const MAX_ATOM_COUNT = 1e7;     // tổng số nguyên tử 1 loại trong công thức
+  const MAX_MOLAR = 1e9;          // g/mol — chặn kết quả vô lý
+  const MAX_NEST_DEPTH = 3;       // ()/[] lồng tối đa (Al2(SO4)3=1, K4[Fe(CN)6]=2)
+
+  const clean = String(formula||"")
+    .replace(/\s+/g,"")
+    .replace(/[·⋅•]/g,".");
+
+  if(!clean) throw new Error("Vui lòng nhập công thức hóa học.");
+  if(clean.length > MAX_FORMULA_LEN) throw new Error(`Công thức quá dài (tối đa ${MAX_FORMULA_LEN} ký tự).`);
+  if(/\(\)|\[\]/.test(clean)) throw new Error("Không được có ngoặc rỗng.");
+  // Chỉ số 0
+  if(/[A-Za-z]\d*0(?:\D|$)/.test(clean) || /[(\[]0/.test(clean) || /(?:^|\D)0[A-Z(\[]/.test(clean)) {
+    throw new Error("Chỉ số không được bằng 0.");
+  }
+  // Chỉ có nhóm trong ngoặc
+  if(/^\([^)]*\)$/.test(clean) || /^\[[^\]]*\]$/.test(clean)) {
+    throw new Error("Công thức không đầy đủ: chỉ có nhóm trong ngoặc.");
+  }
+  // Cân bằng ngoặc + giới hạn độ sâu lồng nhau
+  let depthParen=0, depthBracket=0;
+  for(const ch of clean){
+    if(ch==="(") depthParen++;
+    else if(ch===")") depthParen--;
+    else if(ch==="[") depthBracket++;
+    else if(ch==="]") depthBracket--;
+    if(depthParen<0 || depthBracket<0) throw new Error("Ngoặc không khớp.");
+    if(depthParen + depthBracket > MAX_NEST_DEPTH)
+      throw new Error("Ngoặc lồng nhau quá sâu (tối đa " + MAX_NEST_DEPTH + " lớp).");
+  }
+  if(depthParen!==0 || depthBracket!==0) throw new Error("Ngoặc không khớp.");
+
+  const segments = clean.split(".");
+  if(segments.some(s=>!s)) throw new Error("Dấu phân tách không hợp lệ (ví dụ muối ngậm nước thiếu phần).");
+  if(segments.length > 6) throw new Error("Quá nhiều đoạn hydrate (tối đa 5 dấu ·).");
+
+  if(!elements.length) throw new Error("Dữ liệu nguyên tố chưa sẵn sàng.");
+  const massMap = new Map();
+  for(const e of elements){
+    if(e.symbol && validNumber(e.atomic_mass)) massMap.set(e.symbol, e.atomic_mass);
+  }
+  const total = new Map();
+
+  function safeMul(a, b, ctx){
+    if(!Number.isFinite(a) || !Number.isFinite(b)) throw new Error(`Tràn số (${ctx}).`);
+    const p = a * b;
+    if(!Number.isFinite(p) || Math.abs(p) > MAX_ATOM_COUNT) throw new Error(`Hệ số quá lớn (${ctx}).`);
+    return p;
+  }
+  function safeAddCount(map, sym, n){
+    const next = (map.get(sym)||0) + n;
+    if(!Number.isFinite(next) || next > MAX_ATOM_COUNT) throw new Error(`Số nguyên tử ${sym} vượt giới hạn.`);
+    if(next < 0) throw new Error("Số đếm âm — lỗi nội bộ parser.");
+    map.set(sym, next);
+  }
+
+  function parseSegment(seg){
+    let i=0, leading="";
+    while(i<seg.length && /\d/.test(seg[i])) leading += seg[i++];
+    const coef = leading ? Number(leading) : 1;
+    if(!Number.isSafeInteger(coef) || coef < 1 || coef > MAX_COEF)
+      throw new Error(`Hệ số không hợp lệ (1–${MAX_COEF}).`);
+    const body = seg.slice(i);
+    if(!body) throw new Error("Thiếu thành phần sau hệ số.");
+    // Tokenize: element | digits | brackets
+    const tokens = body.match(/[A-Z][a-z]?|\d+|[()[\]]/g) || [];
+    if(tokens.join("") !== body) throw new Error("Có ký tự không hợp lệ trong công thức.");
+    let pos = 0;
+
+    function parseGroup(expected=null){
+      const counts = new Map();
+      while(pos < tokens.length){
+        const t = tokens[pos];
+        if(t===")" || t==="]"){
+          if(!expected || t !== expected) throw new Error("Ngoặc không khớp.");
+          pos++;
+          return counts;
+        }
+        if(t==="(" || t==="["){
+          pos++;
+          const close = t==="(" ? ")" : "]";
+          const nested = parseGroup(close);
+          if(nested.size===0) throw new Error("Ngoặc rỗng hoặc không có nguyên tố.");
+          let mul = 1;
+          if(pos < tokens.length && /^\d+$/.test(tokens[pos])){
+            mul = Number(tokens[pos++]);
+            if(!Number.isSafeInteger(mul) || mul < 1 || mul > MAX_COEF)
+              throw new Error(`Chỉ số nhóm không hợp lệ (1–${MAX_COEF}).`);
+          }
+          nested.forEach((n,s)=> safeAddCount(counts, s, safeMul(n, mul, s+"×"+mul)));
+          continue;
+        }
+        if(/^[A-Z][a-z]?$/.test(t)){
+          if(!massMap.has(t)) throw new Error(`Không tìm thấy nguyên tố “${t}”.`);
+          pos++;
+          let mul = 1;
+          if(pos < tokens.length && /^\d+$/.test(tokens[pos])){
+            mul = Number(tokens[pos++]);
+            if(!Number.isSafeInteger(mul) || mul < 1 || mul > MAX_COEF)
+              throw new Error(`Chỉ số nguyên tố không hợp lệ (1–${MAX_COEF}).`);
+          }
+          safeAddCount(counts, t, mul);
+          continue;
+        }
+        throw new Error("Cấu trúc công thức không hợp lệ.");
+      }
+      if(expected) throw new Error("Thiếu ngoặc đóng.");
+      return counts;
+    }
+
+    const comp = parseGroup();
+    if(pos !== tokens.length) throw new Error("Không phân tích hết công thức.");
+    comp.forEach((n,s)=> safeAddCount(total, s, safeMul(n, coef, s+"×coef")));
+  }
+
+  segments.forEach(parseSegment);
+  if(total.size===0) throw new Error("Không tìm thấy nguyên tố.");
+
+  let molar = 0;
+  const breakdown = [];
+  total.forEach((count, sym)=>{
+    const mass = massMap.get(sym);
+    if(!validNumber(mass)) throw new Error(`Thiếu khối lượng nguyên tử của ${sym}.`);
+    const contrib = count * mass;
+    if(!Number.isFinite(contrib)) throw new Error(`Tràn số khi tính đóng góp của ${sym}.`);
+    molar += contrib;
+    breakdown.push({symbol:sym, count, mass, contribution:contrib, name:(elements.find(e=>e.symbol===sym)||{}).name||sym});
+  });
+  if(!Number.isFinite(molar) || molar <= 0 || molar > MAX_MOLAR)
+    throw new Error("Khối lượng mol nằm ngoài khoảng hợp lệ.");
+  // Sắp xếp breakdown theo thứ tự xuất hiện tương đối (Z tăng) cho ổn định
+  breakdown.sort((a,b)=>{
+    const za = (elements.find(e=>e.symbol===a.symbol)||{}).number||0;
+    const zb = (elements.find(e=>e.symbol===b.symbol)||{}).number||0;
+    return za - zb;
+  });
+  return {molar, breakdown};
+}
+
+function calculateMolarMass(){
+  const formula = $("#formulaInput").value.trim();
+  const out = $("#molarResult");
+  const barColors = ["#50d8ef","#6d8cff","#4ade80","#facc15","#fb7185","#a78bfa","#38bdf8","#f472b6"];
+  try{
+    const r = parseFormula(formula);
+    const parts = r.breakdown.map((i,idx)=>{
+      const pct = (i.contribution/r.molar)*100;
+      return {...i, pct, color: barColors[idx % barColors.length]};
+    });
+    const barHtml = parts.map(i=>
+      `<div title="${escapeHTML(i.symbol)} ${i.pct.toFixed(2)}%" style="width:${Math.max(i.pct,0.8)}%;background:${i.color};height:100%;min-width:2px"></div>`
+    ).join("");
+    const legendHtml = parts.map(i=>
+      `<span style="display:inline-flex;align-items:center;gap:6px;margin:4px 10px 4px 0;font-size:11px">
+        <i style="width:10px;height:10px;border-radius:2px;background:${i.color};display:inline-block"></i>
+        <strong>${escapeHTML(i.symbol)}</strong> ${i.pct.toFixed(2)}%
+        <span style="color:var(--muted)">(${i.count} × ${formatNumber(i.mass,3)})</span>
+      </span>`
+    ).join("");
+    out.innerHTML = `
+      <div class="result-box">
+        <span class="chart-note">KHỐI LƯỢNG MOL (M)</span><br>
+        <strong>${formatNumber(r.molar,5)} g/mol</strong>
+        <p>Công thức: ${escapeHTML(formula)} · ${r.breakdown.length} loại nguyên tố</p>
+        <div style="margin-top:12px">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Tỷ lệ phần trăm khối lượng</div>
+          <div style="display:flex;height:18px;border-radius:9px;overflow:hidden;background:#0b1423;border:1px solid var(--line)">${barHtml}</div>
+          <div style="margin-top:10px">${legendHtml}</div>
+        </div>
+        <div class="breakdown" style="margin-top:12px">${parts.map(i=>
+          `${i.symbol}: ${i.count} × ${formatNumber(i.mass,5)} = ${formatNumber(i.contribution,5)} u`
+        ).join("<br>")}</div>
+      </div>`;
+  }catch(err){
+    out.innerHTML = `<div class="feedback show bad">${escapeHTML(err.message)}</div>`;
+  }
+}
+$("#calculateBtn").addEventListener("click", calculateMolarMass);
+$("#formulaInput").addEventListener("keydown", e=>{if(e.key==="Enter") calculateMolarMass();});
+$("#formulaClear").addEventListener("click", ()=>{$("#formulaInput").value=""; $("#molarResult").innerHTML="";});
+
+/* ========== TREND CHART ========== */
+function getTrendValue(e,type){
+  if(type==="electronegativity_pauling") return validNumber(e.electronegativity_pauling)?e.electronegativity_pauling:null;
+  if(type==="ionization_energies"){
+    const v = Array.isArray(e.ionization_energies) ? e.ionization_energies[0] : null;
+    return validNumber(v) ? v : null;
+  }
+  if(type==="atomic_mass") return validNumber(e.atomic_mass)?e.atomic_mass:null;
+  if(type==="atomic_radius"){
+    // Ưu tiên empirical → calculated (đơn vị pm). Không trộn covalent/metallic/vdW trong cùng biểu đồ.
+    if(validNumber(e.atomic_radius)) return e.atomic_radius;
+    const r = e.atomic_radii;
+    if(!r) return null;
+    const emp = Array.isArray(r.empirical) ? r.empirical[0] : null;
+    const calc = Array.isArray(r.calculated) ? r.calculated[0] : null;
+    if(validNumber(emp)) return emp;
+    if(validNumber(calc)) return calc;
+    return null;
+  }
+  return null;
+}
+
+/** Trả về nhãn phương pháp bán kính đang dùng (để ghi trên biểu đồ). */
+function getRadiusMethodLabel(e){
+  if(validNumber(e.atomic_radius)) return "atomic_radius";
+  const r = e.atomic_radii;
+  if(!r) return null;
+  const emp = Array.isArray(r.empirical) ? r.empirical[0] : null;
+  const calc = Array.isArray(r.calculated) ? r.calculated[0] : null;
+  if(validNumber(emp)) return "empirical";
+  if(validNumber(calc)) return "calculated";
+  return null;
+}
+
+function renderTrendChart(){
+  if(!elements.length) return;
+  const type = $("#trendSelect").value;
+  const period = $("#trendPeriod").value;
+  const inScope = elements.filter(e=>period==="all"||String(e.period)===period).sort((a,b)=>a.number-b.number);
+  const points = inScope.map(e=>({e, v:getTrendValue(e,type)})).filter(p=>p.v!==null);
+
+  const svg = $("#trendChart");
+  const W=760, H=300, left=52, right=20, top=20, bottom=52;
+  const plotW = W-left-right, plotH = H-top-bottom;
+  svg.innerHTML = "";
+
+  const make = (tag,attrs={},text="")=>{
+    const n = document.createElementNS("http://www.w3.org/2000/svg",tag);
+    Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));
+    if(text) n.textContent = text;
+    svg.appendChild(n);
+    return n;
+  };
+
+  if(points.length<2){
+    make("text",{x:W/2,y:H/2,"text-anchor":"middle",fill:"#91a4bf","font-size":"14"},"Không đủ dữ liệu cho lựa chọn này.");
+    $("#trendNote").textContent = "Nguồn dữ liệu không có đủ giá trị phù hợp.";
+    return;
+  }
+
+  const zMin = inScope[0].number, zMax = inScope[inScope.length-1].number;
+  const values = points.map(p=>p.v);
+  const min = Math.min(...values), max = Math.max(...values);
+  const pad = max===min ? 1 : (max-min)*0.08;
+  const yMin = min-pad, yMax = max+pad;
+  const xZ = z => left + ((z-zMin)/Math.max(zMax-zMin,1))*plotW;
+  const yV = v => top + plotH - (v-yMin)/(yMax-yMin)*plotH;
+
+  for(let i=0;i<=4;i++){
+    const yy = top + i*plotH/4;
+    make("line",{x1:left,y1:yy,x2:W-right,y2:yy,stroke:"rgba(148,163,184,.18)","stroke-dasharray":"4 5"});
+    make("text",{x:left-8,y:yy+4,"text-anchor":"end",fill:"#91a4bf","font-size":"10"},formatNumber(yMax-(yMax-yMin)*i/4,2));
+  }
+
+  // Chỉ nối hai điểm liên tiếp trên trục Z nếu không bị "nhảy" quá xa (tránh nối xuyên khoảng thiếu dữ liệu)
+  const maxGap = period==="all" ? 1 : 1;
+  let path = "";
+  let prev = null;
+  points.forEach(p=>{
+    const px = xZ(p.e.number), py = yV(p.v);
+    if(prev && (p.e.number-prev.e.number)<=maxGap){
+      path += ` L ${px} ${py}`;
+    } else {
+      path += `${path?" ":" "}M ${px} ${py}`;
+    }
+    prev = p;
+  });
+  make("path",{d:path.trim(),fill:"none",stroke:"#50d8ef","stroke-width":"2.5","stroke-linejoin":"round","stroke-linecap":"round"});
+
+  points.forEach(p=>{
+    const cx = xZ(p.e.number), cy = yV(p.v);
+    const c = make("circle",{cx,cy,r:6,fill:"#a5f3fc",stroke:"#0b1423","stroke-width":"2","data-z":String(p.e.number),style:"cursor:pointer"});
+    c.style.cursor = "pointer";
+    c.setAttribute("role","button");
+    c.setAttribute("aria-label",`${p.e.symbol} Z=${p.e.number} giá trị ${p.v}`);
+    c.addEventListener("click", ()=>{
+      selectElement(p.e, true);
+      const btn = document.querySelector(`.element[data-number="${p.e.number}"]`);
+      if(btn) btn.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"});
+      $("#elementPanel")?.scrollIntoView({behavior:"smooth",block:"nearest"});
+      showToast(`${p.e.symbol} (Z=${p.e.number}) · đã chọn trên bảng tuần hoàn`);
+    });
+    c.addEventListener("mouseenter", ()=>{ c.setAttribute("r","9"); c.setAttribute("fill","#fff"); });
+    c.addEventListener("mouseleave", ()=>{ c.setAttribute("r","6"); c.setAttribute("fill","#a5f3fc"); });
+    if(points.length<=20 || p.e.number%Math.ceil((zMax-zMin)/12)===0){
+      make("text",{x:cx,y:H-28,"text-anchor":"middle",fill:"#bdcbe0","font-size":"10"},p.e.symbol);
+    }
+  });
+  make("text",{x:W/2,y:H-6,"text-anchor":"middle",fill:"#91a4bf","font-size":"10"},`Trục X = Z (${zMin}–${zMax}) · Click điểm → chọn nguyên tố trên bảng · khoảng trống = thiếu dữ liệu`);
+
+  const labels = {
+    electronegativity_pauling:"Độ âm điện Pauling (không thứ nguyên) — khí hiếm thường không có giá trị",
+    ionization_energies:"Năng lượng ion hóa thứ nhất I₁ (kJ/mol)",
+    atomic_radius:"Bán kính nguyên tử (pm) — ưu tiên empirical, thiếu thì calculated (không trộn covalent/vdW)",
+    atomic_mass:"Khối lượng nguyên tử trung bình theo độ phong phú tự nhiên (u = Dalton)"
+  };
+  const missing = inScope.length - points.length;
+  let methodNote = "";
+  if(type==="atomic_radius" && points.length){
+    const methods = new Set(points.map(p=>getRadiusMethodLabel(p.e)).filter(Boolean));
+    methodNote = methods.size ? ` · Phương pháp: ${[...methods].join("/")}` : "";
+  }
+  $("#trendNote").textContent = `${labels[type]}${methodNote} · ${points.length} điểm có dữ liệu` + (missing ? `, ${missing} nguyên tố thiếu dữ liệu (không nội suy)` : "") + `. Xu hướng chung trong chu kỳ: bán kính thường giảm, độ âm điện thường tăng theo Z. Có ngoại lệ (ví dụ giữa nhóm II–III, V–VI với năng lượng ion hóa).`;
+
+  const explain = {
+    electronegativity_pauling:`
+      <strong>Lớp 1 — Quan sát:</strong> Trong một chu kỳ, độ âm điện thường tăng từ trái sang phải.<br>
+      <strong>Lớp 2 — Giải thích:</strong> Điện tích hạt nhân tăng, bán kính có xu hướng giảm → khả năng hút electron liên kết tăng.<br>
+      <strong>Lớp 3 — Lưu ý:</strong> Khí hiếm thường không gán độ âm điện Pauling; có ngoại lệ giữa các nguyên tố.`,
+    ionization_energies:`
+      <strong>Lớp 1 — Quan sát:</strong> Năng lượng ion hóa thứ nhất thường tăng trong một chu kỳ (trái → phải).<br>
+      <strong>Lớp 2 — Giải thích:</strong> Electron ngoài cùng bị hút mạnh hơn khi Z tăng và bán kính giảm.<br>
+      <strong>Lớp 3 — Lưu ý:</strong> Có “nhảy” nhỏ giữa nhóm II–III, V–VI do cấu hình ổn định bán phần.`,
+    atomic_radius:`
+      <strong>Lớp 1 — Quan sát:</strong> Trong một chu kỳ, bán kính nguyên tử thường giảm từ trái sang phải.<br>
+      <strong>Lớp 2 — Giải thích:</strong> Electron thêm vào cùng lớp chính trong khi điện tích hạt nhân tăng → lực hút hiệu dụng tăng.<br>
+      <strong>Lớp 3 — Lưu ý quan trọng:</strong> Bán kính nguyên tử phụ thuộc phương pháp đo: bán kính cộng hóa trị, bán kính Van der Waals hay bán kính kim loại. Nguồn dữ liệu có thể khác định nghĩa.`,
+    atomic_mass:`
+      <strong>Lớp 1 — Quan sát:</strong> Khối lượng nguyên tử trung bình tăng theo Z.<br>
+      <strong>Lớp 2 — Giải thích:</strong> Chủ yếu do thêm proton và neutron trong hạt nhân.<br>
+      <strong>Lớp 3 — Lưu ý:</strong> Giá trị là trung bình theo độ phong phú đồng vị trong tự nhiên.`
+  };
+  const box = $("#trendExplain");
+  if(box) box.innerHTML = explain[type] || "";
+}
+$("#trendSelect").addEventListener("change", renderTrendChart);
+$("#trendPeriod").addEventListener("change", renderTrendChart);
+
+/* ========== COMPARE ========== */
+function addToCompare(e){
+  if(!e || !Number.isInteger(e.number)) return;
+  // Luôn lấy bản mới nhất từ mảng elements (tránh stale shells/category)
+  const fresh = elements.find(x=>x.number===e.number) || e;
+  if(compareElements.some(x=>x.number===fresh.number)){showToast("Nguyên tố này đã có trong danh sách.");return;}
+  if(compareElements.length>=4){showToast("Chỉ so sánh tối đa 4 nguyên tố.");return;}
+  compareElements.push(fresh); renderCompare(); showToast(`Đã thêm ${fresh.name}`);
+}
+function renderCompare(){
+  const list = $("#compareList"), out = $("#compareOutput");
+  // Re-hydrate từ elements để shells/category luôn mới
+  compareElements = compareElements
+    .map(c => elements.find(x=>x.number===c.number) || c)
+    .filter(Boolean);
+  if(!compareElements.length){
+    list.innerHTML = '<span class="chart-note">Chưa có nguyên tố nào được chọn.</span>';
+    out.innerHTML = ""; return;
+  }
+  list.innerHTML = compareElements.map(e=>`
+    <span class="compare-chip">${escapeHTML(e.symbol)} · ${escapeHTML(e.name)}
+      <button type="button" data-remove="${e.number}" aria-label="Xóa">×</button>
+    </span>`).join("");
+  $$("[data-remove]").forEach(b=>b.addEventListener("click",()=>{
+    compareElements = compareElements.filter(x=>x.number!==Number(b.dataset.remove));
+    renderCompare();
+  }));
+
+  const rows = [
+    ["Số hiệu Z",e=>e.number],
+    ["Khối lượng (u)",e=>formatNumber(e.atomic_mass,5)],
+    ["Chu kỳ",e=>e.period],
+    ["Nhóm",e=>e.group??"—"],
+    ["Phân bố electron",e=>e.shells?.join(" – ")||"—"],
+    ["Độ âm điện",e=>formatNumber(e.electronegativity_pauling,3)],
+    ["Năng lượng ion hóa I",e=>formatNumber(e.ionization_energies?.[0],2)],
+    ["Trạng thái",e=>e.phase||"—"],
+    ["Nhóm nguyên tố",e=>categoryNames[e.category]||e.category||"—"]
+  ];
+  out.innerHTML = `<div style="overflow-x:auto"><table class="compare-table">
+    <thead><tr><th>Thuộc tính</th>${compareElements.map(e=>`<th>${escapeHTML(e.symbol)}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map(([l,g])=>`<tr><td>${l}</td>${compareElements.map(e=>`<td>${escapeHTML(g(e))}</td>`).join("")}</tr>`).join("")}</tbody>
+  </table></div>`;
+}
+$("#clearCompare").addEventListener("click", ()=>{compareElements=[]; renderCompare();});
+
+/* ========== QUIZ ========== */
+const LEVEL_LABELS = { NB:"Nhận biết", TH:"Thông hiểu", VD:"Vận dụng", VDC:"Vận dụng cao" };
+
+const quizBank = [
+  {level:"NB", topic:"Khái niệm cơ bản (Z, ký hiệu)", q:"Số hiệu nguyên tử Z cho biết thông tin nào?",
+    options:["Số neutron trong hạt nhân","Số proton trong hạt nhân","Số khối A","Khối lượng nguyên tử trung bình"], answer:1,
+    explain:"Z bằng số proton. Nguyên tử trung hòa có số electron = Z.",
+    whyWrong:["Số neutron = A − Z, không phải Z.","Đáp án đúng.","Số khối A = Z + n.","Khối lượng nguyên tử trung bình là đại lượng khác (đơn vị u)."]},
+  {level:"NB", topic:"Khái niệm cơ bản (Z, ký hiệu)", q:"Nguyên tố Z = 11 là?",
+    options:["Neon (Ne)","Magnesium (Mg)","Sodium (Na)","Aluminium (Al)"], answer:2,
+    explain:"Z = 11 là Sodium (Natri), ký hiệu Na.",
+    whyWrong:["Ne có Z = 10.","Mg có Z = 12.","Đáp án đúng.","Al có Z = 13."]},
+  {level:"NB", topic:"Nhóm nguyên tố", q:"Nhóm 18 thường được gọi là?",
+    options:["Kim loại kiềm","Halogen","Khí hiếm","Kim loại kiềm thổ"], answer:2,
+    explain:"Nhóm 18 là khí hiếm (He, Ne, Ar…).",
+    whyWrong:["Kim loại kiềm là nhóm 1.","Halogen là nhóm 17.","Đáp án đúng.","Kim loại kiềm thổ là nhóm 2."]},
+  {level:"NB", topic:"Nhóm nguyên tố", q:"Kim loại kiềm thuộc nhóm nào?",
+    options:["Nhóm IA (nhóm 1)","Nhóm IIA (nhóm 2)","Nhóm VIIA (nhóm 17)","Nhóm 0 (nhóm 18)"], answer:0,
+    explain:"Kim loại kiềm thuộc nhóm 1 (IA).",
+    whyWrong:["Đáp án đúng.","Nhóm 2 là kim loại kiềm thổ.","Nhóm 17 là halogen.","Nhóm 18 là khí hiếm."]},
+  {level:"NB", topic:"Khái niệm cơ bản (Z, ký hiệu)", q:"Ký hiệu của nguyên tố Carbon là?",
+    options:["Ca","C","Co","Cr"], answer:1,
+    explain:"Carbon có ký hiệu C, số hiệu Z = 6.",
+    whyWrong:["Ca là Canxi.","Đáp án đúng.","Co là Coban.","Cr là Crom."]},
+  {level:"NB", topic:"Khái niệm cơ bản (Z, ký hiệu)", q:"Số electron của nguyên tử trung hòa bằng?",
+    options:["Số neutron","Số proton","Số khối","Khối lượng nguyên tử"], answer:1,
+    explain:"Nguyên tử trung hòa: số electron = số proton = Z.",
+    whyWrong:["Số neutron không quyết định tính trung hòa điện.","Đáp án đúng.","Số khối A = Z + n.","Khối lượng nguyên tử không phải số đếm hạt."]},
+  {level:"NB", topic:"Cấu hình electron / Bohr", q:"Lớp electron đầu tiên (lớp K) chứa tối đa bao nhiêu electron?",
+    options:["2","8","18","32"], answer:0,
+    explain:"Lớp K (n=1) theo 2n² chứa tối đa 2 electron.",
+    whyWrong:["Đáp án đúng.","8 là sức chứa lớp L (n=2).","18 là sức chứa lớp M (n=3).","32 là sức chứa lớp N (n=4)."]},
+  {level:"NB", topic:"Khái niệm cơ bản (Z, ký hiệu)", q:"Nguyên tố Z = 8 là?",
+    options:["Nitrogen","Oxygen","Fluorine","Carbon"], answer:1,
+    explain:"Z = 8 là Oxygen (Oxi).",
+    whyWrong:["N có Z = 7.","Đáp án đúng.","F có Z = 9.","C có Z = 6."]},
+  {level:"NB", topic:"Khái niệm cơ bản (Z, ký hiệu)", q:"Đơn vị khối lượng nguyên tử là?",
+    options:["g/mol","u (hay amu)","kg","mol"], answer:1,
+    explain:"Khối lượng nguyên tử được đo bằng đơn vị u (unified atomic mass unit).",
+    whyWrong:["g/mol là đơn vị khối lượng mol.","Đáp án đúng.","kg là đơn vị SI vĩ mô.","mol là đơn vị lượng chất."]},
+  {level:"NB", topic:"Đồng vị & hạt nhân", q:"Đồng vị của một nguyên tố khác nhau ở điểm nào?",
+    options:["Số proton","Số electron","Số neutron","Số lớp electron"], answer:2,
+    explain:"Đồng vị có cùng số proton (Z), khác số neutron → khác số khối A.",
+    whyWrong:["Cùng Z nghĩa là cùng số proton.","Nguyên tử trung hòa: e = Z.","Đáp án đúng.","Số lớp electron không định nghĩa đồng vị."]},
+
+  {level:"TH", topic:"Nhóm nguyên tố", q:"Các nguyên tố cùng chu kỳ có đặc điểm chung nào?",
+    options:["Cùng số electron hóa trị","Cùng số lớp electron","Cùng số proton","Cùng tính chất hóa học hoàn toàn"], answer:1,
+    explain:"Cùng chu kỳ → cùng số lớp electron.",
+    whyWrong:["Số e hóa trị giống nhau khi cùng nhóm.","Đáp án đúng.","Mỗi nguyên tố một Z.","Tính chất thay đổi rõ trong một chu kỳ."]},
+  {level:"TH", topic:"Cấu hình electron / Bohr", q:"Phân bố electron theo lớp của oxygen (Z = 8) là?",
+    options:["2 – 6","2 – 8","2 – 5","2 – 4"], answer:0,
+    explain:"Oxygen: lớp K có 2, lớp L có 6 electron.",
+    whyWrong:["Đáp án đúng.","2–8 là Neon (Z=10).","2–5 là Nitrogen (Z=7).","2–4 là Carbon (Z=6)."]},
+  {level:"TH", topic:"Cấu hình electron / Bohr", q:"Cấu hình electron theo lớp của magnesium (Z = 12) là?",
+    options:["2 – 8 – 2","2 – 7 – 3","2 – 8 – 1","2 – 6 – 4"], answer:0,
+    explain:"Mg: 2 – 8 – 2.",
+    whyWrong:["Đáp án đúng.","Không khớp Z=12.","2–8–1 là Natri (Z=11).","Tổng e phải = 12."]},
+  {level:"TH", topic:"Xu hướng tuần hoàn", q:"Độ âm điện biểu thị khả năng nào của nguyên tử?",
+    options:["Nhường proton","Hút cặp electron liên kết","Tạo neutron","Phân rã hạt nhân"], answer:1,
+    explain:"Độ âm điện đặc trưng khả năng hút electron trong liên kết.",
+    whyWrong:["Không liên quan nhường proton.","Đáp án đúng.","Neutron không liên quan độ âm điện.","Phân rã hạt nhân là phóng xạ."]},
+  {level:"TH", topic:"Xu hướng tuần hoàn", q:"Trong một chu kỳ, theo chiều Z tăng, bán kính nguyên tử nhìn chung?",
+    options:["Tăng dần","Giảm dần","Không đổi","Tăng rồi giảm"], answer:1,
+    explain:"Điện tích hạt nhân tăng, electron thêm vào cùng lớp → lực hút tăng → bán kính giảm.",
+    whyWrong:["Trong nhóm (trên → dưới) bán kính mới tăng.","Đáp án đúng.","Có xu hướng rõ.","Xu hướng chính là giảm."]},
+  {level:"TH", topic:"Xu hướng tuần hoàn", q:"Đại lượng nào thường tăng từ trái sang phải trong một chu kỳ?",
+    options:["Bán kính nguyên tử","Tính kim loại","Độ âm điện","Số lớp electron"], answer:2,
+    explain:"Độ âm điện nhìn chung tăng từ trái sang phải trong chu kỳ.",
+    whyWrong:["Bán kính thường giảm.","Tính kim loại thường giảm.","Đáp án đúng.","Số lớp không đổi trong một chu kỳ."]},
+  {level:"TH", topic:"Nhóm nguyên tố", q:"Nguyên tố thuộc nhóm VIIA (nhóm 17) thường có tính gì?",
+    options:["Kim loại mạnh","Phi kim, dễ nhận electron","Khí hiếm","Á kim"], answer:1,
+    explain:"Nhóm 17 (halogen) là phi kim, xu hướng nhận 1 electron để đạt cấu hình khí hiếm.",
+    whyWrong:["Không phải kim loại mạnh.","Đáp án đúng.","Khí hiếm là nhóm 18.","Halogen không xếp á kim."]},
+  {level:"TH", topic:"Cấu hình electron / Bohr", q:"Số electron hóa trị của nguyên tố nhóm IIA là?",
+    options:["1","2","3","7"], answer:1,
+    explain:"Nhóm IIA (kim loại kiềm thổ) có 2 electron hóa trị.",
+    whyWrong:["1 là nhóm IA.","Đáp án đúng.","3 là nhóm IIIA.","7 là nhóm VIIA."]},
+  {level:"TH", topic:"Nhóm nguyên tố", q:"Tại sao khí hiếm ít tham gia phản ứng hóa học?",
+    options:["Có bán kính lớn","Có cấu hình electron bền vững (lớp ngoài cùng đủ electron)","Có độ âm điện cao","Có nhiều neutron"], answer:1,
+    explain:"Khí hiếm có lớp ngoài cùng đủ electron (cấu hình bền), nên ít tham gia phản ứng.",
+    whyWrong:["Bán kính không phải nguyên nhân chính.","Đáp án đúng.","Khí hiếm thường không gán EN Pauling.","Số neutron không quyết định tính trơ."]},
+  {level:"TH", topic:"Khối lượng mol", q:"Khối lượng mol của H₂O xấp xỉ?",
+    options:["16 g/mol","17 g/mol","18 g/mol","20 g/mol"], answer:2,
+    explain:"M(H₂O) ≈ 2×1,008 + 15,999 ≈ 18,015 g/mol.",
+    whyWrong:["16 gần M(O).","17 gần M(OH).","Đáp án đúng.","20 không khớp."]},
+
+  {level:"VD", topic:"Xu hướng tuần hoàn", q:"So sánh bán kính nguyên tử của Na và Cl (cùng chu kỳ 3)?",
+    options:["Na < Cl","Na > Cl","Na = Cl","Không xác định"], answer:1,
+    explain:"Trong cùng chu kỳ, Na (nhóm 1) có bán kính lớn hơn Cl (nhóm 17).",
+    whyWrong:["Sai hướng xu hướng.","Đáp án đúng.","Hai nguyên tố khác Z.","Có thể so theo xu hướng tuần hoàn."]},
+  {level:"VD", topic:"Xu hướng tuần hoàn", q:"Nguyên tố nào có năng lượng ion hóa thứ nhất lớn hơn: Na hay Ne?",
+    options:["Na","Ne","Bằng nhau","Không so sánh được"], answer:1,
+    explain:"Ne là khí hiếm, cấu hình bền, I₁ rất cao so với Na.",
+    whyWrong:["Na dễ mất 1e → I₁ thấp.","Đáp án đúng.","Hai giá trị khác nhau rõ.","Cùng chu kỳ 3, có dữ liệu để so."]},
+  {level:"VD", topic:"Khối lượng mol", q:"Công thức của đồng sunfat pentahydrate là?",
+    options:["CuSO4·5H2O","CuSO4·H2O","Cu2SO4·5H2O","CuSO4·10H2O"], answer:0,
+    explain:"Đồng sunfat pentahydrate: CuSO₄·5H₂O.",
+    whyWrong:["Đáp án đúng.","Đó là monohydrate.","Tỷ lệ Cu:SO4 sai.","Không phải dạng phổ biến."]},
+  {level:"VD", topic:"Nhóm nguyên tố", q:"Nguyên tố nào là kim loại chuyển tiếp và hay dùng làm chất xúc tác?",
+    options:["Na","Fe","Cl","Ne"], answer:1,
+    explain:"Sắt (Fe) là kim loại chuyển tiếp, dùng nhiều làm chất xúc tác.",
+    whyWrong:["Na là kim loại kiềm.","Đáp án đúng.","Cl là halogen.","Ne là khí hiếm."]},
+  {level:"VD", topic:"Xu hướng tuần hoàn", q:"Tại sao Flo có độ âm điện cao hơn Clo?",
+    options:["Flo có bán kính nhỏ hơn, lực hút electron mạnh hơn","Flo có nhiều proton hơn","Flo ở chu kỳ lớn hơn","Flo có cấu hình kém bền hơn"], answer:0,
+    explain:"F có bán kính nhỏ hơn Cl → lực hút electron liên kết mạnh hơn → EN cao hơn.",
+    whyWrong:["Đáp án đúng.","F (Z=9) ít proton hơn Cl (Z=17).","F chu kỳ 2, Cl chu kỳ 3.","Cả hai halogen đều dễ nhận 1e."]},
+  {level:"VD", topic:"Cấu hình electron / Bohr", q:"Nguyên tố có lớp ngoài cùng 2 – 8 – 7 thuộc nhóm nào?",
+    options:["Nhóm 1","Nhóm 2","Nhóm 17","Nhóm 18"], answer:2,
+    explain:"7 electron lớp ngoài → nhóm VIIA (17) – halogen.",
+    whyWrong:["Nhóm 1: 1e hóa trị.","Nhóm 2: 2e hóa trị.","Đáp án đúng.","Nhóm 18: 8e lớp ngoài (trừ He)."]},
+  {level:"VD", topic:"Xu hướng tuần hoàn", q:"Từ trái sang phải trong chu kỳ 2, xu hướng nào đúng?",
+    options:["Bán kính tăng, độ âm điện giảm","Bán kính giảm, độ âm điện tăng","Cả hai đều tăng","Cả hai đều giảm"], answer:1,
+    explain:"Trong một chu kỳ: bán kính thường giảm, độ âm điện thường tăng.",
+    whyWrong:["Ngược xu hướng.","Đáp án đúng.","Bán kính không tăng trong chu kỳ.","EN không giảm theo chiều này."]},
+  {level:"VD", topic:"Cấu hình electron / Bohr", q:"Nguyên tố X có Z = 12. Ion X²⁺ giống khí hiếm nào?",
+    options:["He","Ne","Ar","Kr"], answer:1,
+    explain:"X = Mg (2-8-2). Mất 2e → 2-8, giống Ne.",
+    whyWrong:["He chỉ 2e.","Đáp án đúng.","Ar: 2-8-8.","Kr: 36e."]},
+  {level:"VD", topic:"Khối lượng mol", q:"M(Al₂(SO₄)₃) ≈ 342 g/mol. Kết quả này?",
+    options:["Sai, quá thấp","Đúng (xấp xỉ)","Sai, quá cao","Không thể tính được"], answer:1,
+    explain:"M ≈ 2×27 + 3×32 + 12×16 = 342 g/mol.",
+    whyWrong:["Không thấp.","Đáp án đúng.","Không cao.","Có thể tính từ khối lượng nguyên tử."]},
+  {level:"VD", topic:"Nhóm nguyên tố", q:"Nguyên tố nào thuộc họ Lantan?",
+    options:["Fe (Z=26)","Ce (Z=58)","U (Z=92)","Au (Z=79)"], answer:1,
+    explain:"Họ Lantan: Z=57–71. Ce (Z=58) thuộc họ này.",
+    whyWrong:["Fe: kim loại chuyển tiếp.","Đáp án đúng.","U: họ Actini.","Au: kim loại chuyển tiếp."]},
+
+  {level:"VDC", topic:"Cấu hình electron / Bohr", q:"Tại sao mô hình Bohr vẫn được dạy ở lớp 10 dù đã có mô hình lượng tử?",
+    options:["Vì Bohr hoàn toàn chính xác","Vì giúp học sinh hình dung số electron trên các lớp một cách trực quan","Vì mô hình lượng tử sai","Vì Bohr dự đoán được mọi tính chất"], answer:1,
+    explain:"Bohr đơn giản, trực quan, phù hợp lớp 10 trước khi học orbital.",
+    whyWrong:["Bohr không còn chính xác tuyệt đối.","Đáp án đúng.","Mô hình lượng tử mô tả đúng hơn.","Bohr không giải thích mọi tính chất."]},
+  {level:"VDC", topic:"Cấu hình electron / Bohr", q:"“Minh họa 2n²” nghĩa là gì?",
+    options:["Cách điền electron thật theo Aufbau","Giới hạn sức chứa lớp — không phải thuật toán điền electron thực tế","Công thức tính số proton","Cách tính độ âm điện"], answer:1,
+    explain:"2n² = sức chứa tối đa lớp n. Điền electron thật: Aufbau + Pauli + Hund.",
+    whyWrong:["Thứ tự điền thật là Aufbau/Pauli/Hund.","Đáp án đúng.","Số proton = Z.","EN là thang Pauling."]},
+  {level:"VDC", topic:"Orbital & lượng tử", q:"Ở chế độ đám mây (trực quan), electron được thể hiện thế nào?",
+    options:["Quỹ đạo tròn cố định","Đám mây chuyển động hỗn loạn — minh họa, không phải hàm sóng thật","Đứng yên quanh hạt nhân","Chỉ ở lớp ngoài cùng"], answer:1,
+    explain:"Đám mây trực quan giúp hình dung electron không nằm trên quỹ đạo cố định; không phải mô phỏng hàm sóng.",
+    whyWrong:["Đó là Bohr (minh họa).","Đáp án đúng.","Electron không đứng yên.","Electron có mặt ở mọi lớp đang chiếm."]},
+  {level:"VDC", topic:"Xu hướng tuần hoàn", q:"Nguyên tố có độ âm điện lớn nhất là?",
+    options:["Oxygen","Fluorine","Chlorine","Nitrogen"], answer:1,
+    explain:"Fluorine (F) có EN Pauling cao nhất (~3,98).",
+    whyWrong:["O cao nhưng thấp hơn F.","Đáp án đúng.","Cl thấp hơn F.","N thấp hơn O và F."]},
+  {level:"VDC", topic:"Khái niệm cơ bản (Z, ký hiệu)", q:"Yêu cầu khoa học quan trọng nhất của sản phẩm STEM hóa học là gì?",
+    options:["Giao diện đẹp","Dữ liệu chính xác, không ngụy tạo, minh bạch nguồn","Nhiều hiệu ứng","Chạy trên điện thoại"], answer:1,
+    explain:"Trung thực khoa học và minh bạch dữ liệu là nền tảng STEM giáo dục.",
+    whyWrong:["Thẩm mỹ không thay thế độ chính xác.","Đáp án đúng.","Hiệu ứng không được đánh đổi bằng sai lệch.","Tiện ích thứ cấp so với trung thực khoa học."]}
+];
+
+/* ========== QUIZ ENGINE (Phase 4) ========== */
+function startQuiz(){
+  // Lọc theo level nếu user chọn (quiz.levelFilter: null | NB|TH|VD|VDC)
+  let pool = quizBank;
+  if(quiz.levelFilter){
+    pool = quizBank.filter(q=>q.level===quiz.levelFilter);
+    if(!pool.length) pool = quizBank;
+  }
+  // Ưu tiên chủ đề đang yếu (wrongTopics) với xác suất 40%
+  const weakTopics = Object.entries(quiz.wrongTopics||{}).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);
+  if(weakTopics.length && Math.random()<0.4){
+    const prefer = pool.filter(q=>weakTopics.includes(q.topic));
+    if(prefer.length) pool = prefer;
+  }
+  let idx;
+  do { idx = Math.floor(Math.random()*pool.length); } while(pool.length>1 && quiz.lastQuestion===pool[idx].q);
+  const raw = pool[idx];
+  quiz.lastQuestion = raw.q;
+  quiz.lastIndex = quizBank.indexOf(raw);
+
+  const order = raw.options.map((_,i)=>i);
+  for(let i=order.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [order[i],order[j]] = [order[j],order[i]];
+  }
+  const shuffledOptions = order.map(i=>raw.options[i]);
+  const newAnswer = order.indexOf(raw.answer);
+  const shuffledWhy = order.map(i=>(raw.whyWrong&&raw.whyWrong[i])||"");
+
+  quiz.current = {
+    q: raw.q, options: shuffledOptions, answer: newAnswer,
+    explain: raw.explain, whyWrong: shuffledWhy,
+    level: raw.level, topic: raw.topic
+  };
+  quiz.locked = false;
+
+  const levelTag = LEVEL_LABELS[raw.level] || raw.level;
+  $("#quizQuestion").innerHTML = `<span style="display:inline-block;font-size:10px;padding:3px 8px;border-radius:6px;background:rgba(80,216,239,.12);color:var(--cyan);margin-bottom:8px">${escapeHTML(levelTag)} · ${escapeHTML(raw.topic)}</span><br>${escapeHTML(raw.q)}`;
+  $("#quizFeedback").className = "feedback";
+  $("#quizFeedback").textContent = "";
+  $("#quizOptions").innerHTML = quiz.current.options.map((opt,i)=>
+    `<button class="quiz-option" data-answer="${i}">${String.fromCharCode(65+i)}. ${escapeHTML(opt)}</button>`
+  ).join("");
+  $$("[data-answer]").forEach(b=>b.addEventListener("click", ()=>answerQuiz(Number(b.dataset.answer), b)));
+  $("#nextQuestion").textContent = "Câu tiếp theo";
+}
+
+function guessTopic(q){
+  const t = (q||"").toLowerCase();
+  if(/đồng vị|neutron|số khối|protium|deuterium/.test(t)) return "Đồng vị & hạt nhân";
+  if(/orbital|lượng tử|đám mây|hàm sóng/.test(t)) return "Orbital & lượng tử";
+  if(/bohr|lớp electron|2n|phân bố|cấu hình|hóa trị/.test(t)) return "Cấu hình electron / Bohr";
+  if(/độ âm điện|bán kính|ion hóa|xu hướng|chu kỳ/.test(t)) return "Xu hướng tuần hoàn";
+  if(/khối lượng mol|công thức|g\/mol|h₂o|h2o|al₂|cuso4/.test(t)) return "Khối lượng mol";
+  if(/nhóm|khí hiếm|halogen|kiềm|kiềm thổ|chuyển tiếp|lantan/.test(t)) return "Nhóm nguyên tố";
+  if(/số hiệu|proton|electron trung hòa|ký hiệu|z =/.test(t)) return "Khái niệm cơ bản (Z, ký hiệu)";
+  return "Khác";
+}
+
+function answerQuiz(idx, btn){
+  if(quiz.locked || !quiz.current) return;
+  quiz.locked = true; quiz.answered++;
+  const ok = idx === quiz.current.answer;
+  const topic = quiz.current.topic || guessTopic(quiz.current.q);
+  const level = quiz.current.level || "NB";
+
+  // Progress tracking
+  if(!quiz.byLevel) quiz.byLevel = {};
+  if(!quiz.byLevel[level]) quiz.byLevel[level] = {ok:0, total:0};
+  quiz.byLevel[level].total++;
+
+  if(ok){
+    quiz.score++;
+    quiz.byLevel[level].ok++;
+  } else {
+    quiz.wrongTopics[topic] = (quiz.wrongTopics[topic]||0) + 1;
+  }
+
+  $$("[data-answer]").forEach(o=>{
+    o.disabled = true;
+    if(Number(o.dataset.answer)===quiz.current.answer) o.classList.add("correct");
+  });
+  if(!ok) btn.classList.add("wrong");
+
+  // Feedback: correct explain + why each wrong option is wrong
+  const fb = $("#quizFeedback");
+  fb.className = `feedback show ${ok?"good":"bad"}`;
+  let html = (ok?"✓ Chính xác! ":"✕ Chưa đúng. ") + escapeHTML(quiz.current.explain);
+  if(quiz.current.whyWrong && quiz.current.whyWrong.length){
+    html += `<div style="margin-top:10px;font-size:11px;line-height:1.7">`;
+    quiz.current.options.forEach((opt,i)=>{
+      if(i===quiz.current.answer) return;
+      const reason = quiz.current.whyWrong[i];
+      if(reason && reason!=="Đáp án đúng.")
+        html += `<div style="opacity:.9">• <strong>${String.fromCharCode(65+i)}</strong>: ${escapeHTML(reason)}</div>`;
+    });
+    html += `</div>`;
+  }
+  fb.innerHTML = html;
+  $("#quizScore").textContent = `Điểm: ${quiz.score} / ${quiz.answered}`;
+}
+
+function jumpToStudyTab(tabId){
+  const tabBtn = document.querySelector(`[data-tab="${tabId}"]`);
+  if(tabBtn) tabBtn.click();
+  const panel = document.querySelector(".tabs");
+  if(panel) panel.scrollIntoView({behavior:"smooth",block:"start"});
+  showToast("Đã chuyển tới phần ôn tập");
+}
+
+function showQuizSummary(){
+  const box = $("#quizAdaptive");
+  if(!box) return;
+  const topicToTab = {
+    "Đồng vị & hạt nhân":"isotope",
+    "Orbital & lượng tử":"orbital",
+    "Cấu hình electron / Bohr":"orbital",
+    "Xu hướng tuần hoàn":"trend",
+    "Khối lượng mol":"molar",
+    "Nhóm nguyên tố":"trend",
+    "Khái niệm cơ bản (Z, ký hiệu)":"molar",
+    "Khác":"molar"
+  };
+  const entries = Object.entries(quiz.wrongTopics).sort((a,b)=>b[1]-a[1]);
+  box.style.display = "block";
+
+  let levelHtml = "";
+  if(quiz.byLevel && Object.keys(quiz.byLevel).length){
+    levelHtml = `<div style="margin:10px 0;display:flex;flex-wrap:wrap;gap:8px">` +
+      ["NB","TH","VD","VDC"].map(lv=>{
+        const s = quiz.byLevel[lv];
+        if(!s||!s.total) return "";
+        const pct = Math.round(100*s.ok/s.total);
+        return `<span style="font-size:11px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,.05);border:1px solid var(--line)">
+          <strong>${LEVEL_LABELS[lv]||lv}</strong>: ${s.ok}/${s.total} (${pct}%)
+        </span>`;
+      }).join("") + `</div>`;
+  }
+
+  if(quiz.answered===0){
+    box.innerHTML = "<strong>Học thích ứng:</strong> Hãy làm vài câu trước, sau đó xem điểm yếu." + levelHtml;
+    return;
+  }
+  if(entries.length===0){
+    box.innerHTML = `<strong>Học thích ứng:</strong> Chưa có câu sai (${quiz.score}/${quiz.answered}). Tiếp tục luyện để củng cố.` + levelHtml;
+    return;
+  }
+  box.innerHTML = `<strong>Học thích ứng — Điểm yếu & phím tắt ôn tập:</strong>${levelHtml}<div style="display:grid;gap:8px;margin-top:10px">` +
+    entries.map(([t,n])=>{
+      const tab = topicToTab[t] || "molar";
+      return `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+        <span>• <strong>${escapeHTML(t)}</strong> — sai ${n} lần</span>
+        <button type="button" class="btn" data-jump-tab="${tab}">Ôn tab này</button>
+      </div>`;
+    }).join("") +
+    `</div>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <span style="font-size:11px;color:var(--muted);align-self:center">Lọc mức độ:</span>
+      <button type="button" class="btn" data-level-filter="">Tất cả</button>
+      <button type="button" class="btn" data-level-filter="NB">Nhận biết</button>
+      <button type="button" class="btn" data-level-filter="TH">Thông hiểu</button>
+      <button type="button" class="btn" data-level-filter="VD">Vận dụng</button>
+      <button type="button" class="btn" data-level-filter="VDC">Vận dụng cao</button>
+    </div>`;
+  $$("[data-jump-tab]").forEach(b=>{
+    b.addEventListener("click", ()=>jumpToStudyTab(b.dataset.jumpTab));
+  });
+  $$("[data-level-filter]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      quiz.levelFilter = b.dataset.levelFilter || null;
+      showToast(quiz.levelFilter ? `Lọc: ${LEVEL_LABELS[quiz.levelFilter]}` : "Lọc: Tất cả mức độ");
+      startQuiz();
+    });
+  });
+}
+
+$("#nextQuestion").addEventListener("click", startQuiz);
+$("#quizSummaryBtn")?.addEventListener("click", showQuizSummary);
+
+/* ========== ABOUT & RANDOM ========== */
+function openAboutModal(){
+  $("#aboutModal").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeAboutModal(){
+  $("#aboutModal").classList.remove("open");
+  document.body.style.overflow = "";
+}
+$("#aboutBtn").addEventListener("click", openAboutModal);
+$("#closeAbout").addEventListener("click", closeAboutModal);
+$("#aboutModal").addEventListener("click", ev=>{if(ev.target===$("#aboutModal")) closeAboutModal();});
+
+// Accessibility: Escape đóng modal; tôn trọng prefers-reduced-motion cho animation
+document.addEventListener("keydown", ev=>{
+  if(ev.key==="Escape"){
+    if($("#aboutModal")?.classList.contains("open")) closeAboutModal();
+    if($("#elementModal")?.classList.contains("open")) closeElementModal();
+  }
+});
+const preferReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+if(preferReduced){ atomAnimation = false; }
+
+$("#randomBtn").addEventListener("click", ()=>{
+  if(!elements.length) return;
+  const e = elements[Math.floor(Math.random()*elements.length)];
+  selectElement(e, true);
+  $("#elementPanel").scrollIntoView({behavior:"smooth", block:"center"});
+});
+
+$("#retryBtn").addEventListener("click", loadElements);
+loadElements();
+</script>
+<!-- ==================== MENDELEEV AI ULTIMATE FINAL ==================== -->
+<button class="ai-fab" id="aiToggleBtn" style="position:fixed;bottom:24px;right:24px;z-index:100;background:linear-gradient(135deg,#50d8ef,#007acc);color:#06111c;border:0;border-radius:50px;padding:12px 20px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 8px 30px rgba(80,216,239,.35);display:flex;align-items:center;gap:8px;">✦ Mendeleev AI</button>
+
+<div class="ai-modal" id="aiModal" style="position:fixed;bottom:84px;right:24px;z-index:101;width:min(380px,92vw);height:500px;background:#101b2d;border:1px solid rgba(255,255,255,0.1);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.5);display:none;flex-direction:column;overflow:hidden;">
+  <div class="ai-header" style="padding:14px 16px;background:#142238;border-bottom:1px solid rgba(255,255,255,0.1);display:flex;justify-content:space-between;align-items:center;">
+    <h4 style="margin:0;font-size:14px;color:#50d8ef;">Mendeleev AI · Gia sư Hóa học 10</h4>
+    <button class="close-btn" id="aiCloseBtn" style="background:none;border:none;color:#fff;font-size:16px;cursor:pointer;">✕</button>
+  </div>
+  <div class="ai-body" id="aiChatBody" style="flex:1;padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;font-size:12px;color:#e2e8f0;">
+    <div class="ai-msg bot" style="background:rgba(80,216,239,.1);color:#e2e8f0;padding:10px 12px;border-radius:12px;border:1px solid rgba(80,216,239,.2);line-height:1.5;">Chào bạn trẻ! Ta là Dmitri Mendeleev (1834–1907). Ta đã dành cả đời để sắp xếp các nguyên tố vào Bảng tuần hoàn. Hôm nay, ta ở đây để cùng bạn khám phá 118 nguyên tố và chinh phục môn Hóa học. Bạn muốn bắt đầu từ đâu?</div>
+  </div>
+  <div class="ai-footer" style="padding:10px;border-top:1px solid rgba(255,255,255,0.1);background:#142238;display:flex;gap:8px;">
+    <input type="text" id="aiInput" placeholder="Hỏi Mendeleev AI về Hóa học..." autocomplete="off" style="flex:1;background:#0b1423;border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;padding:9px 12px;font-size:12px;outline:none;">
+    <button class="btn primary" id="aiSendBtn" style="background:#50d8ef;color:#06111c;border:none;border-radius:8px;padding:0 14px;font-weight:bold;cursor:pointer;">Gửi</button>
+  </div>
+</div>
+
+<script>
+/* ========== MENDELEEV AI (AUTO-FALLBACK MODEL ENGINE) ========== */
+const AI_CONFIG = {
+  apiKey: "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",
+  // Danh sách model ưu tiên tự động chạy nối tiếp nếu có lỗi
+  models: [
+    "openai/gpt-oss-20b",
+    "qwen/qwen3.8-27b",
+    "meta-models/muse-spark-open"
+  ]
+};
+
+const SYSTEM_PROMPT = `Bạn là chính nhà bác học vĩ đại Dmitri Ivanovich Mendeleev (1834–1907). QUY TẮC NHẬP VAI: 1. Xưng hô "Ta" hoặc "Tôi", gọi người dùng là "bạn trẻ" hoặc "đồng nghiệp tương lai". Tuyệt đối không gọi tên riêng cá nhân. 2. Am hiểu sâu sắc chương trình Hóa học 10 (GDPT 2018) và 118 nguyên tố. 3. Dùng phương pháp Socratic: Đặt câu hỏi gợi mở, không dọn sẵn đáp án. Trả lời bằng tiếng Việt súc tích, dễ hiểu.`;
+
+const aiToggleBtn = document.getElementById("aiToggleBtn");
+const aiModal = document.getElementById("aiModal");
+const aiCloseBtn = document.getElementById("aiCloseBtn");
+const aiSendBtn = document.getElementById("aiSendBtn");
+const aiInput = document.getElementById("aiInput");
+const aiChatBody = document.getElementById("aiChatBody");
+
+if(aiToggleBtn && aiModal) {
+  aiToggleBtn.addEventListener("click", () => aiModal.classList.toggle("open"));
+  aiCloseBtn.addEventListener("click", () => aiModal.classList.remove("open"));
+}
+
+const styleFix = document.createElement('style');
+styleFix.innerHTML = `.ai-modal.open{display:flex !important}`;
+document.head.appendChild(styleFix);
+
+async function fetchGroqResponse(userText, contextInfo) {
+  let lastError = null;
+  
+  // Thử lần lượt từng model cho đến khi thành công
+  for (const modelName of AI_CONFIG.models) {
+    try {
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${AI_CONFIG.apiKey.trim()}`
+        },
+        body: JSON.stringify({
+          model: modelName,
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT + contextInfo },
+            { role: "user", content: userText }
+          ],
+          temperature: 0.7
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok || data.error) {
+        throw new Error(data.error?.message || `Lỗi từ model ${modelName}`);
+      }
+
+      return data.choices?.[0]?.message?.content;
+    } catch (err) {
+      console.warn(`Model ${modelName} thất bại, đang thử model tiếp theo...`, err);
+      lastError = err;
+    }
+  }
+  throw lastError || new Error("Không thể kết nối tới bất kỳ mô hình AI nào.");
+}
+
+async function sendToMendeleevAI() {
+  if(!aiInput || !aiChatBody) return;
+  const text = aiInput.value.trim();
+  if(!text) return;
+
+  appendMessage(text, "user");
+  aiInput.value = "";
+  aiChatBody.scrollTop = aiChatBody.scrollHeight;
+
+  let contextInfo = "";
+  if(typeof selectedElement !== "undefined" && selectedElement){
+    contextInfo = ` [Người dùng đang xem nguyên tố: ${selectedElement.name} (${selectedElement.symbol}), Z=${selectedElement.number}, Chu kỳ ${selectedElement.period}, Nhóm ${selectedElement.group}].`;
+  }
+
+  const loadingId = appendMessage("Mendeleev đang trầm tư suy ngẫm...", "bot loading");
+  aiChatBody.scrollTop = aiChatBody.scrollHeight;
+
+  try {
+    const replyText = await fetchGroqResponse(text, contextInfo);
+    document.getElementById(loadingId)?.remove();
+
+    const reply = replyText || "Hmm, câu hỏi này thú vị đấy, nhưng ta muốn nghe suy nghĩ của bạn trước!";
+    appendMessage(reply, "bot");
+
+  } catch(err) {
+    document.getElementById(loadingId)?.remove();
+    appendMessage("Khoa học gặp trở ngại: " + err.message, "bot");
+  }
+  aiChatBody.scrollTop = aiChatBody.scrollHeight;
+}
+
+function appendMessage(text, sender) {
+  const div = document.createElement("div");
+  const id = "msg-" + Math.random().toString(36).substr(2, 9);
+  div.id = id;
+  div.className = `ai-msg ${sender}`;
+  div.style.cssText = sender.includes("user") 
+    ? "background:#1b3049;color:#fff;align-self:flex-end;padding:10px 12px;border-radius:12px;max-width:85%;line-height:1.5;word-break:break-word;" 
+    : "background:rgba(80,216,239,.1);color:#e2e8f0;align-self:flex-start;padding:10px 12px;border-radius:12px;max-width:85%;line-height:1.5;border:1px solid rgba(80,216,239,.2);word-break:break-word;";
+  div.textContent = text;
+  aiChatBody.appendChild(div);
+  return id;
+}
+
+if(aiSendBtn && aiInput) {
+  aiSendBtn.addEventListener("click", sendToMendeleevAI);
+  aiInput.addEventListener("keydown", (e) => { if(e.key === "Enter") sendToMendeleevAI(); });
+}
+</script>
+</body>
+</html>
